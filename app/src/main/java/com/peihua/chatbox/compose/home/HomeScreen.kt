@@ -50,7 +50,6 @@ import com.peihua.chatbox.R
 import com.peihua.chatbox.compose.ChatBoxTopBar
 import com.peihua.chatbox.compose.NavigationIcon
 import com.peihua.chatbox.compose.ScreenRouter
-import com.peihua.chatbox.compose.appRouter
 import com.peihua.chatbox.compose.message.MessageScreen
 import com.peihua.chatbox.compose.navigateTo
 import com.peihua.chatbox.utils.ResultData
@@ -275,7 +274,7 @@ fun ChatBoxDrawerItem(
 }
 
 @Composable
-fun NavHostController.NavigationSetup(drawerController: NavHostController) {
+fun NavigationSetup(drawerController: NavHostController) {
     NavHost(navController = drawerController, startDestination = "message/New Chat") {
         // 使用 navArgument 接受参数
         composable("message/{menuId}") { backStackEntry ->

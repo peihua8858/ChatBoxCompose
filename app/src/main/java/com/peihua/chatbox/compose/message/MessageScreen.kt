@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun NavHostController.MessageScreen(menuId: String, modifier: Modifier = Modifier) {
+fun MessageScreen(menuId: String, modifier: Modifier = Modifier) {
     Box(
         modifier = Modifier
             .padding(37.dp)
