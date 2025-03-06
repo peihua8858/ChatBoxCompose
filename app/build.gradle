@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -37,7 +40,8 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.1'
+//        kotlinCompilerExtensionVersion '1.5.1'
+        kotlinCompilerExtensionVersion '1.6.10'
     }
     packaging {
         resources {
@@ -68,9 +72,18 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.animation)
+    implementation(libs.androidx.animation.graphics)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.coil.compose)
     implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 
