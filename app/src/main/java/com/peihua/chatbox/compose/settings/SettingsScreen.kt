@@ -11,17 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.peihua.chatbox.common.tabLayout.TabPager
 import com.peihua.chatbox.compose.ChatBoxTopBar
+import com.peihua.chatbox.compose.navigateBack
 import com.peihua.chatbox.compose.settings.tabs.AdvancedScreen
 import com.peihua.chatbox.compose.settings.tabs.ChatScreen
 import com.peihua.chatbox.compose.settings.tabs.DisplayScreen
 import com.peihua.chatbox.compose.settings.tabs.ModelScreen
 
 @Composable
-fun NavHostController.SettingsScreen() {
+fun SettingsScreen() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(), topBar = {
-            ChatBoxTopBar(navigateUp = { navigateUp() }, title = { "设置" })
+            ChatBoxTopBar(navigateUp = { navigateBack() }, title = { "设置" })
         }) {
         Box(
             modifier = Modifier

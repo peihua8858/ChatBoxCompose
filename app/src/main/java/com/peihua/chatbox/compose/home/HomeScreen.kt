@@ -50,13 +50,15 @@ import com.peihua.chatbox.R
 import com.peihua.chatbox.compose.ChatBoxTopBar
 import com.peihua.chatbox.compose.NavigationIcon
 import com.peihua.chatbox.compose.ScreenRouter
+import com.peihua.chatbox.compose.appRouter
 import com.peihua.chatbox.compose.message.MessageScreen
+import com.peihua.chatbox.compose.navigateTo
 import com.peihua.chatbox.utils.ResultData
 import com.peihua.chatbox.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun NavHostController.HomeScreen(
+fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(HomeViewModel::class.java)
 ) {
@@ -90,7 +92,7 @@ fun NavHostController.HomeScreen(
 }
 
 @Composable
-fun NavHostController.NavigationDrawer(
+fun NavigationDrawer(
     modifier: Modifier = Modifier,
     menuItems: List<DrawerItem>,
     defaultSelectIndex: Int,
@@ -198,7 +200,7 @@ fun NavHostController.NavigationDrawer(
                                 "Setting",
                             ), onClick = {
                                 scope.launch {
-                                    navigate(ScreenRouter.Settings.route)
+                                    navigateTo(ScreenRouter.Settings.route)
                                     drawerState.close()
                                 }
                             })
@@ -208,7 +210,7 @@ fun NavHostController.NavigationDrawer(
                                 "About",
                             ), onClick = {
                                 scope.launch {
-                                    navigate(ScreenRouter.Settings.route)
+                                    navigateTo(ScreenRouter.Settings.route)
                                     drawerState.close()
                                 }
                             })
