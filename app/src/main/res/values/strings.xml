@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ChatBoxCompose</string>
+    <string name="about">关于</string>
+    <string name="settings">设置</string>
+    <string name="model">模型</string>
+    <string name="chat">聊天</string>
+    <string name="advanced">高级</string>
+    <string name="display">显示</string>
+    <string name="language">语言</string>
+    <string name="theme">主题</string>
+    <string name="dark_mode">暗黑模式</string>
+    <string name="light_mode">明亮模式</string>
+    <string name="system_mode">系统模式</string>
+    <string name="system_default">系统默认</string>
+    <string name="text_font_size">文本字体大小</string>
+
 </resources>

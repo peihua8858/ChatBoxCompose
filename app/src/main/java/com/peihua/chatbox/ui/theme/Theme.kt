@@ -40,6 +40,7 @@ fun ChatBoxComposeTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -49,7 +50,6 @@ fun ChatBoxComposeTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
-
     MaterialTheme(
         colorScheme = colorScheme,
         typography = ChatBoxTypography(),

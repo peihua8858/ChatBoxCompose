@@ -2,8 +2,10 @@ package com.peihua.chatbox.compose.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,6 +22,7 @@ import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
@@ -33,10 +36,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -47,8 +52,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.peihua.chatbox.R
-import com.peihua.chatbox.compose.ChatBoxTopBar
-import com.peihua.chatbox.compose.NavigationIcon
+import com.peihua.chatbox.common.ChatBoxTopBar
+import com.peihua.chatbox.common.NavigationIcon
 import com.peihua.chatbox.compose.ScreenRouter
 import com.peihua.chatbox.compose.message.MessageScreen
 import com.peihua.chatbox.compose.navigateTo
@@ -84,7 +89,25 @@ fun HomeScreen(
 
         else -> {
             Box(modifier = Modifier.fillMaxSize()) {
-                Text(text = "请求失败", modifier = Modifier.align(Alignment.Center))
+                Row(
+                    Modifier
+                        .align(Alignment.Center)
+                ) {
+                    Text(
+                        text = "请求失败,",
+                        style = typography.titleMedium,
+                    )
+                    //text 下划线
+                    Text(
+                        text = "请点击重试",
+                        style = typography.titleMedium,
+                        color = Color.Blue,
+                        textDecoration = TextDecoration.Underline,
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.requestMenus()
+                            })
+                }
             }
         }
     }
@@ -132,7 +155,8 @@ fun NavigationDrawer(
                             .fillMaxWidth()
                     ) {
                         val (logo, text) = createRefs()
-                        Image(contentScale = ContentScale.Crop,
+                        Image(
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .constrainAs(logo) {
                                     top.linkTo(parent.top)
@@ -142,26 +166,29 @@ fun NavigationDrawer(
                                 .clip(shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8))),
                             painter = painterResource(id = R.mipmap.logo),
                             contentDescription = "")
-                        Text(text = "ChatBox", modifier = Modifier
-                            .constrainAs(text) {
-                                top.linkTo(logo.top)
-                                bottom.linkTo(logo.bottom)
-                                start.linkTo(logo.end)
-                            }
-                            .padding(start = 8.dp)
+                        Text(
+                            text = "ChatBox", modifier = Modifier
+                                .constrainAs(text) {
+                                    top.linkTo(logo.top)
+                                    bottom.linkTo(logo.bottom)
+                                    start.linkTo(logo.end)
+                                }
+                                .padding(start = 8.dp)
                         )
                     }
-                    HorizontalDivider(modifier = Modifier
-                        .constrainAs(line1) {
-                            top.linkTo(header.bottom)
-                        }
-                        .padding(top = 16.dp, bottom = 16.dp))
-                    LazyColumn(modifier = Modifier
-                        .constrainAs(menuList) {
-                            top.linkTo(line1.bottom)
-                            bottom.linkTo(line2.top)
-                            height = Dimension.fillToConstraints
-                        }) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .constrainAs(line1) {
+                                top.linkTo(header.bottom)
+                            }
+                            .padding(top = 16.dp, bottom = 16.dp))
+                    LazyColumn(
+                        modifier = Modifier
+                            .constrainAs(menuList) {
+                                top.linkTo(line1.bottom)
+                                bottom.linkTo(line2.top)
+                                height = Dimension.fillToConstraints
+                            }) {
                         items(menuItems.size) { index ->
                             ChatBoxDrawerItem(
                                 item = menuItems[index],
@@ -183,16 +210,18 @@ fun NavigationDrawer(
                             }
                         }
                     }
-                    HorizontalDivider(modifier = Modifier
-                        .constrainAs(line2) {
-                            bottom.linkTo(bottomItem.top)
-                        }
-                        .padding(top = 16.dp, bottom = 16.dp))
-                    Column(modifier = Modifier
-                        .wrapContentHeight()
-                        .constrainAs(bottomItem) {
-                            bottom.linkTo(parent.bottom)
-                        }) {
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .constrainAs(line2) {
+                                bottom.linkTo(bottomItem.top)
+                            }
+                            .padding(top = 16.dp, bottom = 16.dp))
+                    Column(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .constrainAs(bottomItem) {
+                                bottom.linkTo(parent.bottom)
+                            }) {
                         ChatBoxDrawerItem(
                             item = DrawerItem(
                                 "",
@@ -209,7 +238,7 @@ fun NavigationDrawer(
                                 "About",
                             ), onClick = {
                                 scope.launch {
-                                    navigateTo(ScreenRouter.Settings.route)
+                                    navigateTo(ScreenRouter.About.route)
                                     drawerState.close()
                                 }
                             })

@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.peihua.chatbox.R
 import com.peihua.chatbox.common.tabLayout.TabPager
-import com.peihua.chatbox.compose.ChatBoxTopBar
+import com.peihua.chatbox.common.ChatBoxTopBar
 import com.peihua.chatbox.compose.navigateBack
 import com.peihua.chatbox.compose.settings.tabs.AdvancedScreen
 import com.peihua.chatbox.compose.settings.tabs.ChatScreen
@@ -22,7 +25,9 @@ fun SettingsScreen() {
     Scaffold(
         modifier = Modifier
             .fillMaxSize(), topBar = {
-            ChatBoxTopBar(navigateUp = { navigateBack() }, title = { "设置" })
+            ChatBoxTopBar(
+                navigateUp = { navigateBack() },
+                title = { stringResource(id = R.string.settings) })
         }) {
         Box(
             modifier = Modifier
@@ -37,17 +42,17 @@ fun SettingsScreen() {
 @Composable
 fun SettingsContent(modifier: Modifier = Modifier) {
     val mTabs = listOf(
-        SettingsTabItem("模型") { m, state -> ModelScreen(m) },
-        SettingsTabItem("显示") { m, state -> DisplayScreen(m) },
-        SettingsTabItem("聊天") { m, state -> ChatScreen(m) },
-        SettingsTabItem("高级") { m, state -> AdvancedScreen(m) },
+        SettingsTabItem(stringResource(R.string.model)) { m, state -> ModelScreen(m) },
+        SettingsTabItem(stringResource(R.string.display)) { m, state -> DisplayScreen(m) },
+        SettingsTabItem(stringResource(R.string.chat)) { m, state -> ChatScreen(m) },
+        SettingsTabItem(stringResource(R.string.advanced)) { m, state -> AdvancedScreen(m) },
     )
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
     ) { mTabs.size }
     TabPager(modifier = modifier, tabs = mTabs, pagerState = pagerState) { m, state, index ->
-        mTabs[index].content(m, state)
+        mTabs[index].content(m.padding(dimensionResource(id = R.dimen.dp_32)), state)
     }
 }
 

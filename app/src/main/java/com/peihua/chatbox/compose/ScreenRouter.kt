@@ -25,4 +25,8 @@ sealed class ScreenRouter(
      * 设置
      */
     data object Settings : ScreenRouter("settings")
+    /**
+     * 关于
+     */
+    data object About : ScreenRouter("about")
 }

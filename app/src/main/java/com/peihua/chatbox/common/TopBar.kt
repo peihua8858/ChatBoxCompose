@@ -1,4 +1,4 @@
-package com.peihua.chatbox.compose
+package com.peihua.chatbox.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -24,11 +24,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.peihua.chatbox.R
+import com.peihua.chatbox.icons.ChatIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatBoxTopBar(
-    modifier: Modifier = Modifier, title: () -> String,
+    modifier: Modifier = Modifier, title: @Composable () -> String,
     navigateUp: () -> Unit = {},
     navigationIcon: @Composable () -> Unit = {
         NavigationIcon(navigateUp = navigateUp)
@@ -60,7 +61,7 @@ fun ChatBoxTopBar(
  */
 @Composable
 fun NavigationIcon(
-    imageVector: ImageVector = Icons.AutoMirrored.Filled.ArrowBack,
+    imageVector: ImageVector = ChatIcons.IosArrowBack,
     navigateUp: () -> Unit = {}
 ) {
     Image(

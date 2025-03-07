@@ -17,7 +17,7 @@ class HomeViewModel : ViewModel() {
         dLog { ">>>>>>requestMenus" }
         request(homeLiveData) {
             dLog { ">>>>>>requestMenus111" }
-            delay(3000)
+            delay(1000)
             dLog { ">>>>>>requestMenus222" }
             val menuItems = listOf(
                 DrawerItem("Message", "New Chat", isDefault = true),

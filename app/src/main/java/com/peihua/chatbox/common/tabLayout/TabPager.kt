@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.TabPosition
+import androidx.compose.material3.TabRow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -19,14 +19,13 @@ import com.peihua.chatbox.common.TabView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> TabPager(
     modifier: Modifier = Modifier,
     tabs: List<T>,
     isFixedModel: Boolean = tabs.size <= 7,
     pagerState: PagerState,
-    tabIndicator: @Composable (List<TabPosition>, PagerState) -> Unit = { tabPositions, state ->
+    tabIndicator: @Composable (tabPositions: List<TabPosition>, PagerState) -> Unit = { tabPositions, state ->
         PagerTabIndicator(tabPositions = tabPositions, pagerState = state)
     },
     pageContent: @Composable (Modifier, PagerState, Int) -> Unit
@@ -35,15 +34,18 @@ fun <T> TabPager(
     val scope = rememberCoroutineScope()
     Column(modifier = modifier.fillMaxWidth()) {
         if (isFixedModel) {
-            PrimaryTabRow(
+            TabRow(
                 modifier = modifier
                     .fillMaxWidth(),
-                selectedTabIndex = pagerState.currentPage
+                selectedTabIndex = pagerState.currentPage,
+                indicator = { tabPositions ->
+                    tabIndicator(tabPositions, pagerState)
+                }
             ) {
                 scope.TabContent(tabs, pagerState)
             }
         } else {
-            PrimaryScrollableTabRow(
+            ScrollableTabRow(
                 modifier = modifier
                     .fillMaxWidth(),
                 selectedTabIndex = pagerState.currentPage, indicator = {
