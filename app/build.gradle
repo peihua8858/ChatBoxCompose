@@ -84,7 +84,8 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
-
+    implementation("dev.tclement.fonticons:core:2.0.0")
+//    implementation("dev.tclement.fonticons:glance:2.0.0")
     debugImplementation(libs.androidx.compose.ui.tooling)
 
 

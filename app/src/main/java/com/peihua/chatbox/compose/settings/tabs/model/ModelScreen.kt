@@ -1,4 +1,4 @@
-package com.peihua.chatbox.compose.settings.tabs
+package com.peihua.chatbox.compose.settings.tabs.model
 
 
 import androidx.compose.foundation.layout.Box

@@ -12,6 +12,9 @@
     <string name="light_mode">明亮模式</string>
     <string name="system_mode">系统模式</string>
     <string name="system_default">系统默认</string>
-    <string name="text_font_size">文本字体大小</string>
-
+    <string name="text_font_size">字体大小</string>
+    <string name="text_font_small">小</string>
+    <string name="text_font_nomal">标准</string>
+    <string name="text_font_large">大</string>
+    <string name="text_font_extraLarge">超大</string>
 </resources>

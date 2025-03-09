@@ -18,19 +18,21 @@ import com.peihua.chatbox.R
 
 
 @Composable
- fun<T> TabView(
+fun <T> TabView(
     modifier: Modifier,
     item: T,
     index: Int,
     isSelected: Boolean,
     onTabClick: (Int) -> Unit
 ) {
-    Tab(modifier = modifier
-        .height(dimensionResource(id = R.dimen.dp_48))
-        .background(Color.Transparent),
+    val colorScheme= MaterialTheme.colorScheme
+    Tab(
+        modifier = modifier
+            .height(dimensionResource(id = R.dimen.dp_48))
+            .background(Color.Transparent),
         selected = isSelected,
-        selectedContentColor = TabRowDefaults.primaryContentColor,
-        unselectedContentColor = TabRowDefaults.secondaryContentColor,
+        selectedContentColor = colorScheme.onPrimary,
+        unselectedContentColor = colorScheme.onSecondary,
         onClick = {
             onTabClick(index)
         }) {

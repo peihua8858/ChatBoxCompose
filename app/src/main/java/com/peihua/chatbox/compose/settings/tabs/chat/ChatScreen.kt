@@ -1,4 +1,4 @@
-package com.peihua.chatbox.compose.settings.tabs
+package com.peihua.chatbox.compose.settings.tabs.chat
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +14,10 @@ import com.peihua.chatbox.R
 import com.peihua.chatbox.common.tabLayout.TabPager
 import com.peihua.chatbox.common.ChatBoxTopBar
 import com.peihua.chatbox.compose.navigateBack
-import com.peihua.chatbox.compose.settings.tabs.AdvancedScreen
-import com.peihua.chatbox.compose.settings.tabs.ChatScreen
-import com.peihua.chatbox.compose.settings.tabs.DisplayScreen
-import com.peihua.chatbox.compose.settings.tabs.ModelScreen
+import com.peihua.chatbox.compose.settings.tabs.advanced.AdvancedScreen
+import com.peihua.chatbox.compose.settings.tabs.chat.ChatScreen
+import com.peihua.chatbox.compose.settings.tabs.display.DisplayScreen
+import com.peihua.chatbox.compose.settings.tabs.model.ModelScreen
 
 @Composable
 fun SettingsScreen() {

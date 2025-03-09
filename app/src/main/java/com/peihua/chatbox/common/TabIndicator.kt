@@ -83,7 +83,7 @@ fun Float.format(digits: Int):Float = "%.${digits}f".format(this).toFloat()
 fun PagerTabIndicator(
     tabPositions: List<TabPosition>,
     pagerState: PagerState,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = MaterialTheme.colorScheme.onPrimary,
     radius: Dp = 20.dp,
     height: Dp = 4.dp,
 ) {
