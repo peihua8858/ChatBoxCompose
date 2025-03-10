@@ -14,11 +14,11 @@ import com.peihua.chatbox.R
 import com.peihua.chatbox.common.tabLayout.TabPager
 import com.peihua.chatbox.common.ChatBoxTopBar
 import com.peihua.chatbox.compose.navigateBack
-import com.peihua.chatbox.compose.settings.tabs.advanced.AdvancedScreen
-import com.peihua.chatbox.compose.settings.tabs.chat.ChatScreen
-import com.peihua.chatbox.compose.settings.tabs.display.DisplayScreen
-import com.peihua.chatbox.compose.settings.tabs.model.ModelScreen
-
+import com.peihua.chatbox.compose.settings.tabs.other.OtherSettingScreen
+import com.peihua.chatbox.compose.settings.tabs.chat.ChatSettingsScreen
+import com.peihua.chatbox.compose.settings.tabs.display.DisplaySettingsScreen
+import com.peihua.chatbox.compose.settings.tabs.model.ModelSettingsScreen
+import com.peihua.chatbox.utils.DLog
 @Composable
 fun SettingsScreen() {
     Scaffold(
@@ -41,10 +41,10 @@ fun SettingsScreen() {
 @Composable
 fun SettingsContent(modifier: Modifier = Modifier) {
     val mTabs = listOf(
-        SettingsTabItem(stringResource(R.string.model)) { m, state -> ModelScreen(m) },
-        SettingsTabItem(stringResource(R.string.display)) { m, state -> DisplayScreen(m) },
-        SettingsTabItem(stringResource(R.string.chat)) { m, state -> ChatScreen(m) },
-        SettingsTabItem(stringResource(R.string.advanced)) { m, state -> AdvancedScreen(m) },
+        SettingsTabItem(stringResource(R.string.model)) { m, state -> ModelSettingsScreen(m) },
+        SettingsTabItem(stringResource(R.string.display)) { m, state -> DisplaySettingsScreen(m) },
+        SettingsTabItem(stringResource(R.string.chat)) { m, state -> ChatSettingsScreen(m) },
+        SettingsTabItem(stringResource(R.string.other)) { m, state -> OtherSettingScreen(m) },
     )
     val pagerState = rememberPagerState(
         initialPage = 0,

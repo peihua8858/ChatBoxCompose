@@ -5,6 +5,7 @@
     <string name="model">模型</string>
     <string name="chat">聊天</string>
     <string name="advanced">高级</string>
+    <string name="other">其他</string>
     <string name="display">显示</string>
     <string name="language">语言</string>
     <string name="theme">主题</string>
@@ -17,4 +18,38 @@
     <string name="text_font_nomal">标准</string>
     <string name="text_font_large">大</string>
     <string name="text_font_extraLarge">超大</string>
+    <string name="settingsShowWordCount">显示消息的字数统计</string>
+    <string name="settingsShowTokenCount">显示消息的Token数量</string>
+    <string name="settingsShowTokenUsage">显示消息的Token消耗</string>
+    <string name="settingsShowModelName">显示模型名称</string>
+    <string name="settingsSpellCheck">拼写检查</string>
+    <string name="settingsResetDefault">重置默认值</string>
+    <string name="settingsNewChatTips">新对话默认提示</string>
+    <!--  网络代理  -->
+    <string name="settingsProxy">网络代理</string>
+    <string name="settingsProxyType">代理类型</string>
+    <string name="settingsProxyHost">代理主机</string>
+    <string name="settingsProxyPort">代理端口</string>
+    <string name="settingsProxyUsername">代理用户名</string>
+    <string name="settingsProxyPassword">代理密码</string>
+    <string name="settingsProxyTest">测试</string>
+    <!--  键盘快捷键  -->
+    <string name="settingsKeyboardShortcuts">键盘快捷键</string>
+    <string name="settingsKeyboardShortcutsTips">快捷键</string>
+    <!--  数据备份与恢复  -->
+    <string name="settingsBackupAndRestore">数据备份与恢复</string>
+    <!--    导出备份数据-->
+    <string name="settingsBackupAndRestoreExport">导出备份数据</string>
+    <!--    导入备份数据-->
+    <string name="settingsBackupAndRestoreImport">导入备份数据</string>
+<!--    导入后将直接生效，原有数据将被完全覆盖，请谨慎操作-->
+    <string name="settingsRestoreTips">导入后将直接生效，原有数据将被完全覆盖，请谨慎操作</string>
+    <!--    聊天记录-->
+    <string name="settingsBackupChat">聊天记录</string>
+    <!--    数据备份-->
+    <string name="settingsBackupAndRestoreBackup">数据备份</string>
+    <!--    数据恢复-->
+    <string name="settingsBackupAndRestoreRestore">数据恢复</string>
+
+
 </resources>

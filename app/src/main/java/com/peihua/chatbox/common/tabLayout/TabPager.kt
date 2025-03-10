@@ -1,10 +1,13 @@
 package com.peihua.chatbox.common.tabLayout
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.TabPosition
@@ -13,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.zIndex
 import com.peihua.chatbox.common.PagerTabIndicator
 import com.peihua.chatbox.common.TabView
@@ -24,7 +28,9 @@ fun <T> TabPager(
     modifier: Modifier = Modifier,
     tabs: List<T>,
     isFixedModel: Boolean = tabs.size <= 7,
-    pagerState: PagerState,
+    pagerState: PagerState = rememberPagerState() {
+        tabs.size
+    },
     tabIndicator: @Composable (tabPositions: List<TabPosition>, PagerState) -> Unit = { tabPositions, state ->
         PagerTabIndicator(tabPositions = tabPositions, pagerState = state)
     },
@@ -32,7 +38,11 @@ fun <T> TabPager(
 ) {
 
     val scope = rememberCoroutineScope()
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         if (isFixedModel) {
             TabRow(
                 modifier = modifier

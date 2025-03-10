@@ -22,13 +22,21 @@ fun writeLog(lazyMessage: () -> String) {
 fun Context.writeLog(tagStr: String, lazyMessage: () -> String) {
     Logcat.writeLog(this, STACK_TRACE_INDEX, tagStr, lazyMessage())
 }
-
+@Composable
+fun  ALog(lazyMessage: () -> Any) {
+    val message = lazyMessage()
+    Logcat.printLog(STACK_TRACE_INDEX, Logcat.A, null, message)
+}
 fun <T> T.aLog(lazyMessage: () -> Any): T {
     val message = lazyMessage()
     Logcat.printLog(STACK_TRACE_INDEX, Logcat.A, null, message)
     return this
 }
-
+@Composable
+fun  VLog(lazyMessage: () -> Any) {
+    val message = lazyMessage()
+    Logcat.printLog(STACK_TRACE_INDEX, Logcat.V, null, message)
+}
 fun <T> T.vLog(lazyMessage: () -> Any): T {
     val message = lazyMessage()
     Logcat.printLog(STACK_TRACE_INDEX, Logcat.V, null, message)
@@ -52,13 +60,21 @@ fun <T> T.wLog(lazyMessage: () -> Any): T {
     Logcat.printLog(STACK_TRACE_INDEX, Logcat.W, null, message)
     return this
 }
-
+@Composable
+fun  ELog(lazyMessage: () -> Any) {
+    val message = lazyMessage()
+    Logcat.printLog(STACK_TRACE_INDEX, Logcat.E, null, message)
+}
 fun <T> T.eLog(lazyMessage: () -> Any): T {
     val message = lazyMessage()
     Logcat.printLog(STACK_TRACE_INDEX, Logcat.E, null, message)
     return this
 }
-
+@Composable
+fun  DLog(lazyMessage: () -> Any) {
+    val message = lazyMessage()
+    Logcat.printLog(STACK_TRACE_INDEX, Logcat.D, null, message)
+}
 fun <T> T.dLog(lazyMessage: () -> Any): T {
     val message = lazyMessage()
     Logcat.printLog(STACK_TRACE_INDEX, Logcat.D, null, message)

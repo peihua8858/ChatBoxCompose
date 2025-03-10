@@ -1,4 +1,4 @@
-package com.peihua.chatbox.compose.settings.tabs.advanced
+package com.peihua.chatbox.compose.settings.tabs.model
 
 
 import androidx.compose.foundation.layout.Box
@@ -8,8 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun AdvancedScreen(modifier: Modifier = Modifier) {
+fun ModelSettingsScreen(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
-        Text(text = "高级")
+        Text(text = "模型")
     }
 }

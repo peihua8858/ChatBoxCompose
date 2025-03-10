@@ -2,6 +2,7 @@ package com.peihua.chatbox.compose.message
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +20,7 @@ fun MessageScreen(menuId: String, modifier: Modifier = Modifier) {
         Text(
             text = "menuId =$menuId",
             fontSize = 20.sp,
-            color = androidx.compose.ui.graphics.Color.Black,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center
         )
     }

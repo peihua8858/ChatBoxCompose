@@ -31,8 +31,8 @@ fun <T> TabView(
             .height(dimensionResource(id = R.dimen.dp_48))
             .background(Color.Transparent),
         selected = isSelected,
-        selectedContentColor = colorScheme.onPrimary,
-        unselectedContentColor = colorScheme.onSecondary,
+        selectedContentColor = colorScheme.primary,
+        unselectedContentColor = colorScheme.onSecondaryContainer,
         onClick = {
             onTabClick(index)
         }) {

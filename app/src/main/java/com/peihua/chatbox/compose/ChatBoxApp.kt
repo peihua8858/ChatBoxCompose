@@ -13,6 +13,9 @@ import androidx.compose.animation.slideOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavDirections
 import androidx.navigation.NavHostController
@@ -71,6 +74,14 @@ fun ChatBoxApp(modifier: Modifier = Modifier) {
     ChatBoxNavHost(
         navController = navController, modifier
     )
+}
+
+@Composable
+fun SetLanguage(locale: Locale) {
+    val configuration = LocalConfiguration.current
+    configuration.setLocale(locale.platformLocale)
+    val resources = LocalContext.current.resources
+    resources.updateConfiguration(configuration, resources.displayMetrics)
 }
 
 /**
