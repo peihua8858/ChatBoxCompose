@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.peihua.chatbox.R
 import com.peihua.chatbox.common.ChatBoxTopBar
-import com.peihua.chatbox.compose.navigateBack
+import com.peihua.chatbox.shared.compose.navigateBack
 
 @Composable
 fun AboutScreen(modifier: Modifier = Modifier) {

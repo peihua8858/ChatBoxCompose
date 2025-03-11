@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-
+    implementation(project(':shared'))
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
     // Compose
@@ -87,7 +87,6 @@ dependencies {
     implementation("dev.tclement.fonticons:core:2.0.0")
 //    implementation("dev.tclement.fonticons:glance:2.0.0")
     debugImplementation(libs.androidx.compose.ui.tooling)
-
 
 
     testImplementation libs.junit

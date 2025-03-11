@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.font.Font
-import com.peihua.chatbox.compose.ChatBoxApp
+import com.peihua.chatbox.shared.compose.ChatBoxApp
 import com.peihua.chatbox.ui.theme.ChatBoxTheme
 import dev.tclement.fonticons.LocalIconSize
 import dev.tclement.fonticons.LocalIconWeight

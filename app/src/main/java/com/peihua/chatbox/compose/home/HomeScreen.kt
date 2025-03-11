@@ -3,6 +3,7 @@ package com.peihua.chatbox.compose.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,9 +55,9 @@ import coil.compose.AsyncImage
 import com.peihua.chatbox.R
 import com.peihua.chatbox.common.ChatBoxTopBar
 import com.peihua.chatbox.common.NavigationIcon
-import com.peihua.chatbox.compose.ScreenRouter
 import com.peihua.chatbox.compose.message.MessageScreen
-import com.peihua.chatbox.compose.navigateTo
+import com.peihua.chatbox.shared.compose.ScreenRouter
+import com.peihua.chatbox.shared.compose.navigateTo
 import com.peihua.chatbox.utils.ResultData
 import com.peihua.chatbox.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
@@ -134,61 +135,44 @@ fun NavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             DismissibleDrawerSheet {
-                ConstraintLayout(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(
-                            top = dimensionResource(id = R.dimen.dp_16),
-                            bottom = dimensionResource(id = R.dimen.dp_16),
+                            top = 16.dp,
+                            bottom = 16.dp,
                         )
                 ) {
-                    val (header, line1, menuList, line2, bottomItem) = createRefs()
-                    ConstraintLayout(
+                    Row(
                         modifier = Modifier
-                            .constrainAs(header) {
-                                top.linkTo(parent.top)
-                            }
                             .padding(
-                                start = dimensionResource(id = R.dimen.dp_16),
-                                end = dimensionResource(id = R.dimen.dp_16)
+                                start = 16.dp,
+                                end = 16.dp
                             )
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start
                     ) {
-                        val (logo, text) = createRefs()
                         Image(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .constrainAs(logo) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                }
-                                .size(dimensionResource(id = R.dimen.dp_32))
-                                .clip(shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8))),
-                            painter = painterResource(id = R.mipmap.logo),
-                            contentDescription = "")
+                                .size(32.dp)
+                                .clip(shape = RoundedCornerShape(8.dp)),
+                            painter =painterResource(R.mipmap.logo),
+                            contentDescription = ""
+                        )
                         Text(
                             text = "ChatBox", modifier = Modifier
-                                .constrainAs(text) {
-                                    top.linkTo(logo.top)
-                                    bottom.linkTo(logo.bottom)
-                                    start.linkTo(logo.end)
-                                }
                                 .padding(start = 8.dp)
                         )
                     }
                     HorizontalDivider(
                         modifier = Modifier
-                            .constrainAs(line1) {
-                                top.linkTo(header.bottom)
-                            }
                             .padding(top = 16.dp, bottom = 16.dp))
                     LazyColumn(
                         modifier = Modifier
-                            .constrainAs(menuList) {
-                                top.linkTo(line1.bottom)
-                                bottom.linkTo(line2.top)
-                                height = Dimension.fillToConstraints
-                            }) {
+                            .weight(1f)
+                    ) {
                         items(menuItems.size) { index ->
                             ChatBoxDrawerItem(
                                 item = menuItems[index],
@@ -210,18 +194,12 @@ fun NavigationDrawer(
                             }
                         }
                     }
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .constrainAs(line2) {
-                                bottom.linkTo(bottomItem.top)
-                            }
-                            .padding(top = 16.dp, bottom = 16.dp))
                     Column(
                         modifier = Modifier
-                            .wrapContentHeight()
-                            .constrainAs(bottomItem) {
-                                bottom.linkTo(parent.bottom)
-                            }) {
+                            .wrapContentHeight()) {
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .padding(top = 16.dp, bottom = 16.dp))
                         ChatBoxDrawerItem(
                             item = DrawerItem(
                                 "",
@@ -246,6 +224,119 @@ fun NavigationDrawer(
 
                 }
             }
+//            DismissibleDrawerSheet {
+//                ConstraintLayout(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(
+//                            top = dimensionResource(id = R.dimen.dp_16),
+//                            bottom = dimensionResource(id = R.dimen.dp_16),
+//                        )
+//                ) {
+//                    val (header, line1, menuList, line2, bottomItem) = createRefs()
+//                    ConstraintLayout(
+//                        modifier = Modifier
+//                            .constrainAs(header) {
+//                                top.linkTo(parent.top)
+//                            }
+//                            .padding(
+//                                start = dimensionResource(id = R.dimen.dp_16),
+//                                end = dimensionResource(id = R.dimen.dp_16)
+//                            )
+//                            .fillMaxWidth()
+//                    ) {
+//                        val (logo, text) = createRefs()
+//                        Image(
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier
+//                                .constrainAs(logo) {
+//                                    top.linkTo(parent.top)
+//                                    start.linkTo(parent.start)
+//                                }
+//                                .size(dimensionResource(id = R.dimen.dp_32))
+//                                .clip(shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8))),
+//                            painter = painterResource(id = R.mipmap.logo),
+//                            contentDescription = "")
+//                        Text(
+//                            text = "ChatBox", modifier = Modifier
+//                                .constrainAs(text) {
+//                                    top.linkTo(logo.top)
+//                                    bottom.linkTo(logo.bottom)
+//                                    start.linkTo(logo.end)
+//                                }
+//                                .padding(start = 8.dp)
+//                        )
+//                    }
+//                    HorizontalDivider(
+//                        modifier = Modifier
+//                            .constrainAs(line1) {
+//                                top.linkTo(header.bottom)
+//                            }
+//                            .padding(top = 16.dp, bottom = 16.dp))
+//                    LazyColumn(
+//                        modifier = Modifier
+//                            .constrainAs(menuList) {
+//                                top.linkTo(line1.bottom)
+//                                bottom.linkTo(line2.top)
+//                                height = Dimension.fillToConstraints
+//                            }) {
+//                        items(menuItems.size) { index ->
+//                            ChatBoxDrawerItem(
+//                                item = menuItems[index],
+//                                isSelected = selectedIndex.value == index,
+//                                onClick = { item ->
+//                                    scope.launch {
+//                                        title.value = item.title
+//                                        selectedIndex.value = index
+//                                        drawerController.navigate(ScreenRouter.Message(item.menuId).route)
+//                                        drawerState.close()
+//                                    }
+//                                })
+//                            if (index < menuItems.size - 1) {
+//                                VerticalDivider(
+//                                    modifier = Modifier.padding(
+//                                        top = 16.dp,
+//                                    )
+//                                )
+//                            }
+//                        }
+//                    }
+//                    HorizontalDivider(
+//                        modifier = Modifier
+//                            .constrainAs(line2) {
+//                                bottom.linkTo(bottomItem.top)
+//                            }
+//                            .padding(top = 16.dp, bottom = 16.dp))
+//                    Column(
+//                        modifier = Modifier
+//                            .wrapContentHeight()
+//                            .constrainAs(bottomItem) {
+//                                bottom.linkTo(parent.bottom)
+//                            }) {
+//                        ChatBoxDrawerItem(
+//                            item = DrawerItem(
+//                                "",
+//                                "Setting",
+//                            ), onClick = {
+//                                scope.launch {
+//                                    navigateTo(ScreenRouter.Settings.route)
+//                                    drawerState.close()
+//                                }
+//                            })
+//                        ChatBoxDrawerItem(
+//                            item = DrawerItem(
+//                                "",
+//                                "About",
+//                            ), onClick = {
+//                                scope.launch {
+//                                    navigateTo(ScreenRouter.About.route)
+//                                    drawerState.close()
+//                                }
+//                            })
+//                    }
+//
+//                }
+//            }
         }) {
         Scaffold(topBar = {
             ChatBoxTopBar(

@@ -13,12 +13,12 @@ import androidx.compose.ui.res.stringResource
 import com.peihua.chatbox.R
 import com.peihua.chatbox.common.tabLayout.TabPager
 import com.peihua.chatbox.common.ChatBoxTopBar
-import com.peihua.chatbox.compose.navigateBack
 import com.peihua.chatbox.compose.settings.tabs.other.OtherSettingScreen
 import com.peihua.chatbox.compose.settings.tabs.chat.ChatSettingsScreen
 import com.peihua.chatbox.compose.settings.tabs.display.DisplaySettingsScreen
 import com.peihua.chatbox.compose.settings.tabs.model.ModelSettingsScreen
-import com.peihua.chatbox.utils.DLog
+import com.peihua.chatbox.shared.compose.navigateBack
+
 @Composable
 fun SettingsScreen() {
     Scaffold(
