@@ -16,9 +16,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
@@ -44,7 +49,6 @@ import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.dark_mode
 import chatboxcompose.shared.generated.resources.language
 import chatboxcompose.shared.generated.resources.language_list_value
-import chatboxcompose.shared.generated.resources.light_mode
 import chatboxcompose.shared.generated.resources.settingsShowModelName
 import chatboxcompose.shared.generated.resources.settingsShowTokenCount
 import chatboxcompose.shared.generated.resources.settingsShowTokenUsage
@@ -55,7 +59,6 @@ import chatboxcompose.shared.generated.resources.theme
 import com.peihua.chatbox.shared.components.CheckboxListTile
 import com.peihua.chatbox.shared.localeProvider
 import com.peihua.chatbox.shared.theme.ThemeMode
-import dev.tclement.fonticons.FontIcon
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -217,11 +220,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
 
                     },
                     label = {
-                        FontIcon(
-                            icon = Char(0xf5e4),
-                            tint = if (selectedIndex.intValue == ThemeMode.system.index)
-                                colorScheme.onPrimary
-                            else colorScheme.primary,
+                        Icon(
+                            Icons.Default.Brightness4,
                             contentDescription = stringResource(Res.string.system_mode)
                         )
                     }
@@ -238,12 +238,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
 
                     },
                     label = {
-                        FontIcon(
-                            icon = Char(0xf852),
-                            tint = if (selectedIndex.intValue == ThemeMode.light.index)
-                                colorScheme.onPrimary
-                            else colorScheme.primary,
-                            contentDescription = stringResource(Res.string.light_mode)
+                        Icon(
+                            Icons.Default.LightMode,
+                            contentDescription = stringResource(Res.string.dark_mode)
                         )
                     }
                 )
@@ -259,11 +256,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
 
                     },
                     label = {
-                        FontIcon(
-                            icon = Char(0xf68c),
-                            tint = if (selectedIndex.intValue == ThemeMode.dark.index)
-                                colorScheme.onPrimary
-                            else colorScheme.primary,
+                        Icon(
+                            Icons.Default.DarkMode,
                             contentDescription = stringResource(Res.string.dark_mode)
                         )
                     }
