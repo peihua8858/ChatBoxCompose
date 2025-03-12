@@ -49,7 +49,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.savedstate.read
 import chatboxcompose.shared.generated.resources.Res
+import chatboxcompose.shared.generated.resources.about
 import chatboxcompose.shared.generated.resources.logo
+import chatboxcompose.shared.generated.resources.settings
 import coil3.compose.AsyncImage
 import com.peihua.chatbox.shared.components.ChatBoxTopBar
 import com.peihua.chatbox.shared.components.NavigationIcon
@@ -61,11 +63,12 @@ import com.peihua.chatbox.shared.utils.ResultData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(HomeViewModel::class)
+    viewModel: HomeViewModel = viewModel(HomeViewModel::class),
 ) {
     val resultData = viewModel.homeLiveData
     when (resultData.value) {
@@ -123,7 +126,7 @@ fun NavigationDrawer(
     val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
     val drawerController = rememberNavController()
     val scope = rememberCoroutineScope()
-    val title = remember { mutableStateOf("Home") }
+    val title = remember { mutableStateOf("New Chat") }
     val selectedIndex = remember { mutableStateOf(defaultSelectIndex) }
     DismissibleNavigationDrawer(
         modifier = modifier
@@ -134,7 +137,6 @@ fun NavigationDrawer(
             ),
         drawerState = drawerState,
         drawerContent = {
-//            drawerState.drawerContent(menuItems, selectedIndex, scope, drawerController)
             DismissibleDrawerSheet {
                 Column(
                     modifier = Modifier
@@ -205,9 +207,8 @@ fun NavigationDrawer(
                                 .padding(top = 16.dp, bottom = 16.dp)
                         )
                         ChatBoxDrawerItem(
-                            item = DrawerItem(
-                                "",
-                                "Setting",
+                            item = DrawerItem("",
+                                stringResource(Res.string.settings),
                             ), onClick = {
                                 scope.launch {
                                     navigateTo(ScreenRouter.Settings.route)
@@ -215,9 +216,8 @@ fun NavigationDrawer(
                                 }
                             })
                         ChatBoxDrawerItem(
-                            item = DrawerItem(
-                                "",
-                                "About",
+                            item = DrawerItem("",
+                                stringResource(Res.string.about),
                             ), onClick = {
                                 scope.launch {
                                     navigateTo(ScreenRouter.About.route)
@@ -259,136 +259,11 @@ fun NavigationDrawer(
 }
 
 @Composable
-fun DrawerState.drawerContent(
-    menuItems: List<DrawerItem>,
-    selectedIndex: MutableState<Int>,
-    scope: CoroutineScope,
-    drawerController: NavHostController
-) {
-
-
-//    DismissibleDrawerSheet {
-//        ConstraintLayout(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(
-//                    top = 16.dp,
-//                    bottom = 16.dp,
-//                )
-//        ) {
-//            val (header, line1, menuList, line2, bottomItem) = createRefs()
-//            ConstraintLayout(
-//                modifier = Modifier
-//                    .constrainAs(header) {
-//                        top.linkTo(parent.top)
-//                    }
-//                    .padding(
-//                        start = 16.dp,
-//                        end = 16.dp
-//                    )
-//                    .fillMaxWidth()
-//            ) {
-//                val (logo, text) = createRefs()
-//                Image(
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier
-//                        .constrainAs(logo) {
-//                            top.linkTo(parent.top)
-//                            start.linkTo(parent.start)
-//                        }
-//                        .size(32.dp)
-//                        .clip(shape = RoundedCornerShape(8.dp)),
-//                    painter = painterResource(id = R.mipmap.logo),
-//                    contentDescription = "")
-//                Text(
-//                    text = "ChatBox", modifier = Modifier
-//                        .constrainAs(text) {
-//                            top.linkTo(logo.top)
-//                            bottom.linkTo(logo.bottom)
-//                            start.linkTo(logo.end)
-//                        }
-//                        .padding(start = 8.dp)
-//                )
-//            }
-//            HorizontalDivider(
-//                modifier = Modifier
-//                    .constrainAs(line1) {
-//                        top.linkTo(header.bottom)
-//                    }
-//                    .padding(top = 16.dp, bottom = 16.dp))
-//            LazyColumn(
-//                modifier = Modifier
-//                    .constrainAs(menuList) {
-//                        top.linkTo(line1.bottom)
-//                        bottom.linkTo(line2.top)
-//                        height = Dimension.fillToConstraints
-//                    }) {
-//                items(menuItems.size) { index ->
-//                    ChatBoxDrawerItem(
-//                        item = menuItems[index],
-//                        isSelected = selectedIndex.value == index,
-//                        onClick = { item ->
-//                            scope.launch {
-//                                title.value = item.title
-//                                selectedIndex.value = index
-//                                drawerController.navigate(ScreenRouter.Message(item.menuId).route)
-//                                drawerState.close()
-//                            }
-//                        })
-//                    if (index < menuItems.size - 1) {
-//                        VerticalDivider(
-//                            modifier = Modifier.padding(
-//                                top = 16.dp,
-//                            )
-//                        )
-//                    }
-//                }
-//            }
-//            HorizontalDivider(
-//                modifier = Modifier
-//                    .constrainAs(line2) {
-//                        bottom.linkTo(bottomItem.top)
-//                    }
-//                    .padding(top = 16.dp, bottom = 16.dp))
-//            Column(
-//                modifier = Modifier
-//                    .wrapContentHeight()
-//                    .constrainAs(bottomItem) {
-//                        bottom.linkTo(parent.bottom)
-//                    }) {
-//                ChatBoxDrawerItem(
-//                    item = DrawerItem(
-//                        "",
-//                        "Setting",
-//                    ), onClick = {
-//                        scope.launch {
-//                            navigateTo(ScreenRouter.Settings.route)
-//                            drawerState.close()
-//                        }
-//                    })
-//                ChatBoxDrawerItem(
-//                    item = DrawerItem(
-//                        "",
-//                        "About",
-//                    ), onClick = {
-//                        scope.launch {
-//                            navigateTo(ScreenRouter.About.route)
-//                            drawerState.close()
-//                        }
-//                    })
-//            }
-//
-//        }
-//    }
-
-}
-
-@Composable
 fun ChatBoxDrawerItem(
     modifier: Modifier = Modifier,
     item: DrawerItem,
     isSelected: Boolean = false,
-    onClick: (DrawerItem) -> Unit
+    onClick: (DrawerItem) -> Unit,
 ) {
     NavigationDrawerItem(
         modifier = modifier.padding(
@@ -427,5 +302,5 @@ data class DrawerItem(
     val menuId: String,
     val title: String,
     val icon: String? = null,
-    val isDefault: Boolean = false
+    val isDefault: Boolean = false,
 )
