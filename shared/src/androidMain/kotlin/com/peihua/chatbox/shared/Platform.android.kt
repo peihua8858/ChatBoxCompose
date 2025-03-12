@@ -19,23 +19,7 @@ class AndroidPlatform : Platform {
             if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         } else return null
     }
-
-    override fun format(value: Float, digits: Int): String {
-        return "%.${digits}f".format(value)
-    }
-
-    override fun format(value: Double, digits: Int): String {
-        return "%.${digits}f".format(value)
-    }
-
-    override fun format(value: Int, digits: Int): String {
-        return "%.${digits}f".format(value)
-    }
 }
 
 private val mPlatform: Platform = AndroidPlatform()
 actual fun platform(): Platform = mPlatform
-
-actual fun Float.format(digits: Int): String = mPlatform.format(this, digits)
-actual fun Double.format(digits: Int): String = mPlatform.format(this, digits)
-actual fun Int.format(digits: Int): String = mPlatform.format(this, digits)

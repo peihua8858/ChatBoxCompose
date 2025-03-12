@@ -31,7 +31,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,7 +59,6 @@ import com.peihua.chatbox.shared.compose.message.MessageScreen
 import com.peihua.chatbox.shared.compose.navigateTo
 import com.peihua.chatbox.shared.repository.HomeViewModel
 import com.peihua.chatbox.shared.utils.ResultData
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

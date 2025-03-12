@@ -10,12 +10,6 @@ interface Platform {
 
     @Composable
     fun dynamicColorScheme(isDarkTheme: Boolean): ColorScheme?
-    fun format(value: Float, digits: Int): String
-    fun format(value: Double, digits: Int): String
-    fun format(value: Int, digits: Int): String
 }
 
 expect fun platform(): Platform
-expect fun Float.format(digits: Int): String
-expect fun Double.format(digits: Int): String
-expect fun Int.format(digits: Int): String
