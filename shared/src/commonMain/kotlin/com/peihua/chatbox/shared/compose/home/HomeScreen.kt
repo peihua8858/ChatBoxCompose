@@ -183,7 +183,8 @@ fun NavigationDrawer(
                                     scope.launch {
                                         title.value = item.title
                                         selectedIndex.value = index
-                                        drawerController.navigate(ScreenRouter.Message(item.menuId).route)
+                                        val messageRoute= ScreenRouter.Message(item.menuId)
+                                        drawerController.navigate(messageRoute.route,messageRoute.navArgument)
                                         drawerState.close()
                                     }
                                 })
@@ -205,7 +206,8 @@ fun NavigationDrawer(
                                 .padding(top = 16.dp, bottom = 16.dp)
                         )
                         ChatBoxDrawerItem(
-                            item = DrawerItem("",
+                            item = DrawerItem(
+                                "",
                                 stringResource(Res.string.settings),
                             ), onClick = {
                                 scope.launch {
@@ -214,7 +216,8 @@ fun NavigationDrawer(
                                 }
                             })
                         ChatBoxDrawerItem(
-                            item = DrawerItem("",
+                            item = DrawerItem(
+                                "",
                                 stringResource(Res.string.about),
                             ), onClick = {
                                 scope.launch {
@@ -286,8 +289,7 @@ fun ChatBoxDrawerItem(
 fun NavigationSetup(drawerController: NavHostController) {
     NavHost(navController = drawerController, startDestination = "message/New Chat") {
         // 使用 navArgument 接受参数
-        composable("message/{menuId}") { backStackEntry ->
-//            val menuId = backStackEntry.arguments?.getString("menuId") ?: "New Chat"
+        composable(route="message/{menuId}"){ backStackEntry ->
             val menuId = backStackEntry.arguments?.read<String> {
                 getStringOrElse("menuId") { "New Chat" }
             } ?: "New Chat"

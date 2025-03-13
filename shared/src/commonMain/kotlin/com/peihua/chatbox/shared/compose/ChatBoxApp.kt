@@ -7,35 +7,22 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontLoadingStrategy
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import chatboxcompose.shared.generated.resources.Res
-import chatboxcompose.shared.generated.resources.materialicons_regular
+import androidx.navigation.navArgument
 import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
-import dev.tclement.fonticons.LocalIconSize
-import dev.tclement.fonticons.LocalIconWeight
-import dev.tclement.fonticons.ProvideIconParameters
-import dev.tclement.fonticons.rememberStaticIconFont
-import org.jetbrains.compose.resources.Font
 
 private lateinit var appRouter: NavHostController
-
-fun navigateTo(route: String) {
-    check(::appRouter.isInitialized)
-    appRouter.navigate(route)
-}
 
 fun navigateBack() {
     check(::appRouter.isInitialized)
@@ -47,9 +34,32 @@ fun popBackStack() {
     appRouter.popBackStack()
 }
 
+fun navigateTo(route: String) {
+    check(::appRouter.isInitialized)
+    appRouter.navigate(route)
+}
+
+fun <T : Any> navigateTo(
+    route: T, navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null,
+) {
+    check(::appRouter.isInitialized)
+    appRouter.navigate(route, navOptions, navigatorExtras)
+
+}
+
 fun navigateTo(route: String, builder: NavOptionsBuilder.() -> Unit) {
     check(::appRouter.isInitialized)
     appRouter.navigate(route, builder)
+}
+
+fun navigate(
+    route: String,
+    navOptions: NavOptions? = null,
+    navigatorExtras: Navigator.Extras? = null,
+) {
+    check(::appRouter.isInitialized)
+    appRouter.navigate(route, navOptions, navigatorExtras)
 }
 
 @Composable

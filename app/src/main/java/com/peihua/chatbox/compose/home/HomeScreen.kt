@@ -55,8 +55,8 @@ import coil.compose.AsyncImage
 import com.peihua.chatbox.R
 import com.peihua.chatbox.common.ChatBoxTopBar
 import com.peihua.chatbox.common.NavigationIcon
+import com.peihua.chatbox.compose.ScreenRouter
 import com.peihua.chatbox.compose.message.MessageScreen
-import com.peihua.chatbox.shared.compose.ScreenRouter
 import com.peihua.chatbox.shared.compose.navigateTo
 import com.peihua.chatbox.utils.ResultData
 import com.peihua.chatbox.viewmodel.HomeViewModel
@@ -181,7 +181,8 @@ fun NavigationDrawer(
                                     scope.launch {
                                         title.value = item.title
                                         selectedIndex.value = index
-                                        drawerController.navigate(ScreenRouter.Message(item.menuId).route)
+                                        val messageRoute= ScreenRouter.Message(item.menuId)
+                                        drawerController.navigate(messageRoute.route)
                                         drawerState.close()
                                     }
                                 })
