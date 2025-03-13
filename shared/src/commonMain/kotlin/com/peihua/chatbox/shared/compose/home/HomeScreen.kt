@@ -184,7 +184,7 @@ fun NavigationDrawer(
                                         title.value = item.title
                                         selectedIndex.value = index
                                         val messageRoute= ScreenRouter.Message(item.menuId)
-                                        drawerController.navigate(messageRoute.route,messageRoute.navArgument)
+                                        drawerController.navigate(messageRoute.route)
                                         drawerState.close()
                                     }
                                 })

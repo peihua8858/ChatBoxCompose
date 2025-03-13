@@ -1,6 +1,8 @@
 package com.peihua.chatbox.shared.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
@@ -244,7 +246,7 @@ data class ColorFamily(
     val color: Color,
     val onColor: Color,
     val colorContainer: Color,
-    val onColorContainer: Color
+    val onColorContainer: Color,
 )
 
 val unspecified_scheme = ColorFamily(
@@ -260,10 +262,10 @@ val customShapes = Shapes(
 
 @Composable
 fun ChatBoxTheme(
-    darkTheme: Boolean = true,//isSystemInDarkTheme(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
-    content: @Composable() () -> Unit
+    content: @Composable() (ThemeMode,colorScheme:ColorScheme) -> Unit,
 ) {
     val dynamicColorScheme = if (dynamicColor) platform().dynamicColorScheme(darkTheme) else null
     val colorScheme = when {
@@ -276,7 +278,9 @@ fun ChatBoxTheme(
         shapes = customShapes,
         colorScheme = colorScheme,
 //    typography = AppTypography,
-        content = content
+        content = {
+            content(if (darkTheme) ThemeMode.dark else ThemeMode.light,colorScheme)
+        }
     )
 
 }

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
@@ -17,10 +18,11 @@ import androidx.navigation.Navigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
+import com.peihua.chatbox.shared.theme.ChatBoxTheme
+import com.peihua.chatbox.shared.theme.ThemeMode
 
 private lateinit var appRouter: NavHostController
 
@@ -63,12 +65,18 @@ fun navigate(
 }
 
 @Composable
-fun ChatBoxApp(modifier: Modifier = Modifier) {
+fun ChatBoxApp(
+    modifier: Modifier = Modifier,
+    theme: (themeMode: ThemeMode, colorScheme: ColorScheme) -> Unit = { model, colorScheme -> },
+) {
     val navController = rememberNavController()
     appRouter = navController
-    ChatBoxNavHost(
-        navController = navController, modifier
-    )
+    ChatBoxTheme { model, colorScheme ->
+        theme(model, colorScheme)
+        ChatBoxNavHost(
+            navController = navController, modifier
+        )
+    }
 }
 
 /**
