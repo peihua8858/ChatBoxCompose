@@ -1,4 +1,5 @@
 package com.peihua.chatbox.shared.theme
+
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF464647)
@@ -216,7 +217,6 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF201F1F)
 val surfaceContainerDarkHighContrast = Color(0xFF313030)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3C3B3B)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF484646)
-
 
 
 fun argb(alpha: Float, red: Float, green: Float, blue: Float): Int {

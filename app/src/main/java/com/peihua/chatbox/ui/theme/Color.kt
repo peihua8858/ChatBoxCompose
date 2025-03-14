@@ -1,5 +1,6 @@
 package com.peihua.chatbox.ui.theme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
 
 val primaryLight = Color(0xFF464647)
 val onPrimaryLight = Color(0xFFFFFFFF)
@@ -216,6 +217,7 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF201F1F)
 val surfaceContainerDarkHighContrast = Color(0xFF313030)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3C3B3B)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF484646)
+
 
 
 

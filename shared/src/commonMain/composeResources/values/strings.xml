@@ -42,7 +42,7 @@
     <string name="settingsBackupAndRestoreExport">导出备份数据</string>
     <!--    导入备份数据-->
     <string name="settingsBackupAndRestoreImport">导入备份数据</string>
-<!--    导入后将直接生效，原有数据将被完全覆盖，请谨慎操作-->
+    <!--    导入后将直接生效，原有数据将被完全覆盖，请谨慎操作-->
     <string name="settingsRestoreTips">导入后将直接生效，原有数据将被完全覆盖，请谨慎操作</string>
     <!--    聊天记录-->
     <string name="settingsBackupChat">聊天记录</string>
@@ -50,6 +50,75 @@
     <string name="settingsBackupAndRestoreBackup">数据备份</string>
     <!--    数据恢复-->
     <string name="settingsBackupAndRestoreRestore">数据恢复</string>
+    <!--  模型提供方  -->
+    <string name="settingsModelProvider">模型提供方</string>
+<!--    OpenAI API Key-->
+    <string name="settingsModelProviderOpenAI">OpenAI API Key</string>
+    <string name="settingsModelAndTokenTips">These settings are aimed at professional developers. If you do not understand the meaning of these settings, please do not modify them, as it may result in request errors. Before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors). Please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.Please make sure you know what you are doing.Click here toto default values.</string>
+<!--    <string name="settingsModelProviderTips">Untitled-->
+<!--You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.-->
+
+<!--word count: 19-->
+
+
+<!--Chatbox-->
+<!--Chat-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Settings-->
+<!--openai-->
+<!--AI Model Provider-->
+<!--OpenAI API Key-->
+<!--sk-xxxxxxxxxxxxxxxxxxxxxxxx-->
+<!--OpenAI API Key-->
+<!--https://api.openai.com-->
+<!--API Host-->
+
+<!--These settings are aimed at professional developers. If you do not understand the meaning of these settings, please do not modify them, as it may result in request errors. Before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors). Please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.Please make sure you know what you are doing.Click here toto default values.-->
+<!--gpt-3.5-turbo-->
+<!--Model-->
+<!--Temperature-->
+
+<!--Meticulous-->
+<!--Creative-->
+
+<!--0.7-->
+<!--0.7-->
+
+<!--Top P-->
+
+
+<!--1-->
+<!--1-->
+
+<!--Max Message Count in Context-->
+
+
+<!--10-->
+<!--10-->
+
+<!--Max Tokens in Context-->
+
+
+<!--4000-->
+<!--4000-->
+
+<!--Max Tokens to Generate-->
+
+
+<!--0-->
+<!--Auto</string>-->
 
 
 </resources>

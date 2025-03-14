@@ -83,6 +83,7 @@ kotlin {
                 implementation(libs.coil3.coil.compose)
                 implementation("dev.tclement.fonticons:core:2.0.0")
                 implementation(kotlin("stdlib-common"))
+
                 // Add KMP dependencies here
             }
         }
@@ -90,6 +91,7 @@ kotlin {
             dependencies {
                 // JVM 相关的标准库
                 implementation(kotlin("stdlib"))
+                implementation(libs.ktor.client.okhttp)
             }
         }
         commonTest {
@@ -106,6 +108,7 @@ kotlin {
                 implementation("io.ktor:ktor-client-android:$ktorVersion")
                 implementation(libs.kotlin.stdlib)
                 implementation(kotlin("stdlib"))
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
@@ -124,7 +127,7 @@ kotlin {
                 // part of KMP’s default source set hierarchy. Note that this source set depends
                 // on common by default and will correctly pull the iOS artifacts of any
                 // KMP dependencies declared in commonMain.
-                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
+                implementation(libs.ktor.client.darwin)
             }
         }
     }
