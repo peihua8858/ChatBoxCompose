@@ -1,0 +1,3 @@
+CREATE TABLE Settings (
+    _id INTEGER PRIMARY KEY NOT NULL
+);

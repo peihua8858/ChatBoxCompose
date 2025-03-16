@@ -1,0 +1,30 @@
+-- 消息数据表，每条消息一行数据
+CREATE TABLE Message (
+    _id INTEGER PRIMARY KEY NOT NULL,
+    menu_id INTEGER NOT NULL ,
+    content TEXT NOT NULL,
+    create_time INTEGER NOT NULL,
+    update_time INTEGER NOT NULL
+);
+-- 插入新记录
+insertMessage:
+INSERT INTO Message (menu_id, content, create_time,update_time)
+VALUES (:menuId, :content, :createTime,:updateTime);
+
+--更新消息内容记录
+updateMessageContentById:
+UPDATE Message SET content=:content,update_time=:updateTime WHERE _id=:id;
+--更新记录
+updateMessageMenuById:
+UPDATE Message SET menu_id=:menuId,update_time=:updateTime WHERE _id=:id;
+-- 查询所有记录，按开始时间升序排序
+selectAllMessagesSortedByUpdateTime:
+SELECT * FROM Message
+ORDER BY update_time ASC;
+--根据id查询记录
+selectMessageById:
+SELECT * FROM Message WHERE _id=:id;
+
+-- 删除记录
+deleteMessageById:
+DELETE FROM Message WHERE _id = :id;

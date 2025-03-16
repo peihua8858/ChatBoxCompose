@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("org.jetbrains.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("app.cash.sqldelight") version "2.0.2"
 }
 
 kotlin {
@@ -83,6 +84,7 @@ kotlin {
                 implementation(libs.coil3.coil.compose)
                 implementation("dev.tclement.fonticons:core:2.0.0")
                 implementation(kotlin("stdlib-common"))
+                implementation("app.cash.sqldelight:runtime:2.0.2")
 
                 // Add KMP dependencies here
             }
@@ -92,6 +94,7 @@ kotlin {
                 // JVM 相关的标准库
                 implementation(kotlin("stdlib"))
                 implementation(libs.ktor.client.okhttp)
+                implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
             }
         }
         commonTest {
@@ -109,6 +112,7 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
                 implementation(kotlin("stdlib"))
                 implementation(libs.ktor.client.okhttp)
+                implementation("app.cash.sqldelight:android-driver:2.0.2")
             }
         }
 
@@ -128,8 +132,17 @@ kotlin {
                 // on common by default and will correctly pull the iOS artifacts of any
                 // KMP dependencies declared in commonMain.
                 implementation(libs.ktor.client.darwin)
+                implementation("app.cash.sqldelight:native-driver:2.0.2")
             }
         }
     }
 
+}
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.peihua.chatbox.shared.db")
+
+        }
+    }
 }

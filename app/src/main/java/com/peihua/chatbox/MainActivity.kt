@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.peihua.chatbox.shared.LocalContext
 import com.peihua.chatbox.shared.compose.ChatBoxApp
 import com.peihua.chatbox.shared.theme.ThemeMode
 import com.peihua.chatbox.shared.theme.argb
@@ -15,12 +16,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
         setContent {
-            ChatBoxApp { model,colorScheme ->
+            ChatBoxApp { model, colorScheme ->
+                LocalContext.context = this
                 window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-                    val windowInsets =
-                        WindowInsetsCompat.toWindowInsetsCompat(window.decorView.rootWindowInsets)
-                    val statusBarInsets =
-                        windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
                     val color = argb(
                         colorScheme.surface.alpha,
                         colorScheme.surface.red,
@@ -32,11 +30,16 @@ class MainActivity : ComponentActivity() {
                     WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars =
                         model == ThemeMode.light
                     // Adjust padding to avoid overlap
-                    view.setPadding(0, statusBarInsets.top, 0, 0)
+                    view.setPadding(0, 0, 0, 0)
                     insets
                 }
             }
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalContext.context = applicationContext
     }
 }
