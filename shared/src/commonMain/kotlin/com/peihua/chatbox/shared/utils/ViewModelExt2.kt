@@ -1,11 +1,16 @@
 package com.peihua.chatbox.shared.utils
 
+import androidx.annotation.CheckResult
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.contracts.ExperimentalContracts
@@ -69,6 +74,28 @@ fun <T> ViewModel.apiSyncRequest(
  */
 fun <T> ViewModel.request(
     viewState: MutableState<ResultData<T>>,
+    request: suspend CoroutineScope.() -> T,
+) {
+    viewModelScope.launch(Dispatchers.Main) {
+        viewState.value = ResultData.Starting()
+        try {
+            val response = withContext(Dispatchers.IO) {
+                request()
+            }
+            viewState.value = ResultData.Success(response)
+        } catch (e: Throwable) {
+            print(e.stackTraceToString())
+            viewState.value = ResultData.Failure(e)
+        }
+    }
+}
+
+
+/**
+ * [ViewModel]在IO线程中开启协程扩展
+ */
+fun <T> ViewModel.request(
+    viewState: MutableStateFlow<ResultData<T>>,
     request: suspend CoroutineScope.() -> T,
 ) {
     viewModelScope.launch(Dispatchers.Main) {

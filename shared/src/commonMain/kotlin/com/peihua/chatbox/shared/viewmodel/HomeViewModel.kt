@@ -1,4 +1,4 @@
-package com.peihua.chatbox.shared.repository
+package com.peihua.chatbox.shared.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,6 @@ import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.utils.request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class HomeViewModel(
