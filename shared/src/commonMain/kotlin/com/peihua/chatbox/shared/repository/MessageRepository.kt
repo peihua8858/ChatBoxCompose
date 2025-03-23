@@ -18,17 +18,35 @@ class MessageRepository(
     val database: AppDatabase = DatabaseHelper.database,
     val messageQueries: MessageQueries = database.messageQueries
 ) : ViewModel() {
-    val updateState = mutableStateOf<ResultData<Message>>(ResultData.Starting())
-    val listMsgState = mutableStateOf<ResultData<List<Message>>>(ResultData.Starting())
-    val selMsgState = mutableStateOf<ResultData<Message>>(ResultData.Starting())
+    val updateState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
+    val listMsgState = mutableStateOf<ResultData<List<Message>>>(ResultData.Initialize())
+    val selMsgState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
     fun requestAllMessages() {
         request(listMsgState) {
             selectAllMessages()
         }
     }
 
+    fun requestAllMessagesByMenuId(menuId: Long) {
+        request(listMsgState) {
+            val result = selectAllByMenuId(menuId)
+            result.ifEmpty {
+                val messages = listOf(
+                    Message(menuId, "New Chat $menuId content"),
+                    Message(menuId, "New Chat1 $menuId content"),
+                    Message(menuId, "New Chat2 $menuId content"),
+                    Message(menuId, "New Chat3 $menuId content"),
+                    Message(menuId, "New Chat4 $menuId content")
+                )
+                insertMessages(messages, menuId)
+                messages
+            }
+
+        }
+    }
+
     fun requestMessageById(messageId: Long) {
-        this.request(selMsgState) {
+        request(selMsgState) {
             selectMessageById(messageId)
         }
     }
@@ -47,6 +65,28 @@ class MessageRepository(
         }
     }
 
+    fun insertMessage(message: Message, menu: Menu) {
+        request(updateState) {
+            messageQueries.insertMessage(menu._id, message.content, message.create_time, message.update_time)
+            val lastInsertedId = messageQueries.lastInsertId().executeAsOne()
+            selectMessageById(lastInsertedId)
+        }
+    }
+
+    suspend fun insertMessages(messages: List<Message>, menuId: Long) {
+        for (message in messages) {
+            insertMessage(message, menuId)
+        }
+    }
+
+    suspend fun insertMessage(message: Message, menuId: Long): Message {
+        return withContext(Dispatchers.IO) {
+            messageQueries.insertMessage(menuId, message.content, message.create_time, message.update_time)
+            val lastInsertedId = messageQueries.lastInsertId().executeAsOne()
+            selectMessageById(lastInsertedId)
+        }
+    }
+
     suspend fun selectMessageById(messageId: Long): Message {
         return withContext(Dispatchers.IO) {
             val result = messageQueries.selectMessageById(messageId)
@@ -58,6 +98,13 @@ class MessageRepository(
         return withContext(Dispatchers.IO) {
             val result = messageQueries.selectAllMessagesSortedByUpdateTime()
             return@withContext result.executeAsList()
+        }
+    }
+
+    suspend fun selectAllByMenuId(menuId: Long): List<Message> {
+        return withContext(Dispatchers.IO) {
+            val result = messageQueries.selectAllMessagesByMenuId(menuId).executeAsList()
+            result
         }
     }
 }

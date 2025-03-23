@@ -24,7 +24,13 @@ ORDER BY update_time ASC;
 --根据id查询记录
 selectMessageById:
 SELECT * FROM Message WHERE _id=:id;
+--根据id查询记录
+selectAllMessagesByMenuId:
+SELECT * FROM Message WHERE menu_id=:menuId;
 
 -- 删除记录
 deleteMessageById:
 DELETE FROM Message WHERE _id = :id;
+
+lastInsertId:
+SELECT last_insert_rowid();

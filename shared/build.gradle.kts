@@ -85,6 +85,7 @@ kotlin {
                 implementation("dev.tclement.fonticons:core:2.0.0")
                 implementation(kotlin("stdlib-common"))
                 implementation("app.cash.sqldelight:runtime:2.0.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
 
                 // Add KMP dependencies here
             }

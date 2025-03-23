@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -54,9 +55,12 @@ import chatboxcompose.shared.generated.resources.settings
 import coil3.compose.AsyncImage
 import com.peihua.chatbox.shared.components.ChatBoxTopBar
 import com.peihua.chatbox.shared.components.NavigationIcon
+import com.peihua.chatbox.shared.components.stateView.ErrorView
+import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.compose.ScreenRouter
 import com.peihua.chatbox.shared.compose.message.MessageScreen
 import com.peihua.chatbox.shared.compose.navigateTo
+import com.peihua.chatbox.shared.db.Menu
 import com.peihua.chatbox.shared.repository.HomeViewModel
 import com.peihua.chatbox.shared.utils.ResultData
 import kotlinx.coroutines.launch
@@ -68,19 +72,19 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(HomeViewModel::class),
 ) {
-    val resultData = viewModel.homeLiveData
-    when (resultData.value) {
+    val menusState = viewModel.menusState
+    val resultData = menusState.value
+    when (resultData) {
+        is ResultData.Initialize -> viewModel.requestMenus()
         is ResultData.Starting -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+            LoadingView()
         }
 
         is ResultData.Success -> {
-            val menuItems = (resultData.value as ResultData.Success<List<DrawerItem>>).data
+            val menuItems = resultData.data
             var selectedIndex = 0
             menuItems.forEachIndexed { index, item ->
-                selectedIndex = if (item.isDefault) index else selectedIndex
+                selectedIndex = if (item.isSelected) index else selectedIndex
             }
             NavigationDrawer(
                 modifier = modifier,
@@ -90,26 +94,8 @@ fun HomeScreen(
         }
 
         else -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Row(
-                    Modifier
-                        .align(Alignment.Center)
-                ) {
-                    Text(
-                        text = "请求失败,",
-                        style = typography.titleMedium,
-                    )
-                    //text 下划线
-                    Text(
-                        text = "请点击重试",
-                        style = typography.titleMedium,
-                        color = Color.Blue,
-                        textDecoration = TextDecoration.Underline,
-                        modifier = Modifier
-                            .clickable {
-                                viewModel.requestMenus()
-                            })
-                }
+            ErrorView {
+                viewModel.requestMenus()
             }
         }
     }
@@ -118,13 +104,14 @@ fun HomeScreen(
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
-    menuItems: List<DrawerItem>,
+    menuItems: List<Menu>,
     defaultSelectIndex: Int,
 ) {
     val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
     val drawerController = rememberNavController()
     val scope = rememberCoroutineScope()
-    val title = remember { mutableStateOf("New Chat") }
+    val firstMenu = menuItems[0]
+    val title = remember { mutableStateOf(firstMenu.menu_name) }
     val selectedIndex = remember { mutableStateOf(defaultSelectIndex) }
     DismissibleNavigationDrawer(
         modifier = modifier
@@ -181,9 +168,9 @@ fun NavigationDrawer(
                                 isSelected = selectedIndex.value == index,
                                 onClick = { item ->
                                     scope.launch {
-                                        title.value = item.title
+                                        title.value = item.menu_name
                                         selectedIndex.value = index
-                                        val messageRoute= ScreenRouter.Message(item.menuId)
+                                        val messageRoute = ScreenRouter.Message(item._id)
                                         drawerController.navigate(messageRoute.route)
                                         drawerState.close()
                                     }
@@ -206,20 +193,16 @@ fun NavigationDrawer(
                                 .padding(top = 16.dp, bottom = 16.dp)
                         )
                         ChatBoxDrawerItem(
-                            item = DrawerItem(
-                                "",
-                                stringResource(Res.string.settings),
-                            ), onClick = {
+                            item = Menu(stringResource(Res.string.settings)),
+                            onClick = {
                                 scope.launch {
                                     navigateTo(ScreenRouter.Settings.route)
                                     drawerState.close()
                                 }
                             })
                         ChatBoxDrawerItem(
-                            item = DrawerItem(
-                                "",
-                                stringResource(Res.string.about),
-                            ), onClick = {
+                            item = Menu(stringResource(Res.string.about)),
+                            onClick = {
                                 scope.launch {
                                     navigateTo(ScreenRouter.About.route)
                                     drawerState.close()
@@ -253,7 +236,7 @@ fun NavigationDrawer(
                     .padding(it)
                     .fillMaxSize()
             ) {
-                NavigationSetup(drawerController = drawerController)
+                NavigationSetup(drawerController = drawerController, firstMenu)
             }
         }
     }
@@ -262,16 +245,16 @@ fun NavigationDrawer(
 @Composable
 fun ChatBoxDrawerItem(
     modifier: Modifier = Modifier,
-    item: DrawerItem,
+    item: Menu,
     isSelected: Boolean = false,
-    onClick: (DrawerItem) -> Unit,
+    onClick: (Menu) -> Unit,
 ) {
     NavigationDrawerItem(
         modifier = modifier.padding(
             start = 16.dp,
             end = 16.dp
         ),
-        label = { Text(item.title) },
+        label = { Text(item.menu_name) },
         selected = isSelected,
         icon = {
             item.icon?.let {
@@ -286,21 +269,17 @@ fun ChatBoxDrawerItem(
 }
 
 @Composable
-fun NavigationSetup(drawerController: NavHostController) {
-    NavHost(navController = drawerController, startDestination = "message/New Chat") {
+fun NavigationSetup(drawerController: NavHostController, menu: Menu) {
+    NavHost(navController = drawerController, startDestination = "message/${menu._id}") {
         // 使用 navArgument 接受参数
-        composable(route="message/{menuId}"){ backStackEntry ->
-            val menuId = backStackEntry.arguments?.read<String> {
-                getStringOrElse("menuId") { "New Chat" }
-            } ?: "New Chat"
+        composable(route = "message/{menuId}") { backStackEntry ->
+            val menuId = backStackEntry.arguments?.read {
+                getString("menuId").toLong()
+            } ?: 0L
             MessageScreen(menuId)
         }
     }
 }
 
-data class DrawerItem(
-    val menuId: String,
-    val title: String,
-    val icon: String? = null,
-    val isDefault: Boolean = false,
-)
+val Menu.isSelected: Boolean
+    get() = this.isDefault == 1L

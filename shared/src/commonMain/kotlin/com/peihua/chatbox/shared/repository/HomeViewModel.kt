@@ -2,37 +2,66 @@ package com.peihua.chatbox.shared.repository
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.peihua.chatbox.shared.compose.home.DrawerItem
+import com.peihua.chatbox.shared.db.AppDatabase
+import com.peihua.chatbox.shared.db.DatabaseHelper
+import com.peihua.chatbox.shared.db.Menu
+import com.peihua.chatbox.shared.db.MenuQueries
 import com.peihua.chatbox.shared.http.HttpClient
 import com.peihua.chatbox.shared.utils.ResultData
-import com.peihua.chatbox.shared.utils.dLog
 import com.peihua.chatbox.shared.utils.request
-import io.ktor.client.call.body
-import io.ktor.client.request.post
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
-class HomeViewModel : ViewModel() {
-    val homeLiveData = mutableStateOf<ResultData<List<DrawerItem>>>(ResultData.Starting())
+class HomeViewModel(
+    val database: AppDatabase = DatabaseHelper.database,
+    val menuQueries: MenuQueries = database.menuQueries
+) : ViewModel() {
+    val menusState = mutableStateOf<ResultData<List<Menu>>>(ResultData.Initialize())
     val httpClient by lazy { HttpClient { } }
 
-    init {
-        requestMenus()
+    fun requestMenus() {
+        request(menusState) {
+            val result = selectAllMenus()
+            result.ifEmpty {
+                val menuItems = listOf(
+                    Menu("New Chat"),
+                    Menu("New Chat1"),
+                    Menu("New Chat2"),
+                    Menu("New Chat3"),
+                    Menu("New Chat4")
+                )
+                insertMenus(menuItems)
+                menuItems
+            }
+        }
     }
 
-    fun requestMenus() {
-        request(homeLiveData) {
-            delay(1000)
-           val response= httpClient.post("https://www.baidu.com")
-          val result=  response.body<String>()
-            dLog { "result>>>$result" }
-            val menuItems = listOf(
-                DrawerItem("Message", "New Chat", isDefault = true),
-                DrawerItem("Message1", "New Chat1", isDefault = false),
-                DrawerItem("Message2", "New Chat2", isDefault = false),
-                DrawerItem("Message3", "New Chat3", isDefault = false),
-                DrawerItem("Message4", "New Chat4", isDefault = false)
-            )
-            menuItems
+    fun insertMenus(menus: List<Menu>) {
+        for (menu in menus) {
+            insertMenu(menu)
+        }
+    }
+
+    fun insertMenu(menu: Menu) {
+        request(menusState) {
+            insetMenu(menu)
+            selectAllMenus()
+
+        }
+    }
+
+    suspend fun insetMenu(menu: Menu) {
+        return withContext(Dispatchers.IO) {
+            menuQueries.insertMenu(menu.menu_name, menu.isDefault, menu.icon, menu.create_time, menu.update_time)
+        }
+    }
+
+    suspend fun selectAllMenus(): List<Menu> {
+        return withContext(Dispatchers.IO) {
+            val result = menuQueries.selectAllMenusSortedByUpdateTime()
+            return@withContext result.executeAsList()
         }
     }
 }

@@ -18,25 +18,20 @@ import kotlin.contracts.contract
  * @version 1.0
  */
 sealed class ResultData<T> {
+    class Initialize<T> : ResultData<T>()
     class Starting<T> : ResultData<T>()
     data class Success<T>(val data: T) : ResultData<T>()
     data class Failure<T>(val error: Throwable) : ResultData<T>()
 }
-sealed class ResultData1<T>(val value: T) {
-    class Starting : ResultData1<Float>(1f)
-     class Success: ResultData1<Int>(33)
-     class Failure : ResultData1<String>("FunnySaltyFish")
-}
-
-fun <V> unboxAndProcess(container: ResultData1<V>): V =
-    when (container) {
-        is ResultData1.Success -> container.value // V 会被推断为 Int
-        is ResultData1.Starting -> container.value // V 会被推断为 String
-        is ResultData1.Failure -> container.value // V 会被推断为 String
-    }
 
 private const val TAG = "ResultData"
-
+@OptIn(ExperimentalContracts::class)
+fun <T> ResultData<T>.isInitialize(): Boolean {
+    contract {
+        returns(true) implies (this@isInitialize is ResultData.Initialize)
+    }
+    return this is ResultData.Initialize
+}
 @OptIn(ExperimentalContracts::class)
 fun <T> ResultData<T>.isSuccess(): Boolean {
     contract {

@@ -16,7 +16,7 @@ sealed class ScreenRouter(
     /**
      * 消息
      */
-    data class Message(val menuId: String) :
+    data class Message(val menuId: Long) :
         ScreenRouter("message/$menuId", listOf(navArgument("menuId") {
             type = NavType.StringType
             defaultValue = "New Chat"
