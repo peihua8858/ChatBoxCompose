@@ -60,8 +60,10 @@ import com.peihua.chatbox.shared.viewmodel.HomeViewModel
 import com.peihua.chatbox.shared.utils.ResultData
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
-
+import org.jetbrains.compose.resources.*
+/**
+ * 主屏幕组件
+ */
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -78,8 +80,11 @@ fun HomeScreen(
         is ResultData.Success -> {
             val menuItems = resultData.data
             var selectedIndex = 0
-            menuItems.forEachIndexed { index, item ->
-                selectedIndex = if (item.isSelected) index else selectedIndex
+           for ((index, item) in menuItems.withIndex()) {
+                if (item.isSelected) {
+                    selectedIndex = index
+                    break
+                }
             }
             NavigationDrawer(
                 modifier = modifier,
@@ -96,6 +101,9 @@ fun HomeScreen(
     }
 }
 
+/**
+ * 导航抽屉组件
+ */
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
@@ -108,30 +116,22 @@ fun NavigationDrawer(
     val firstMenu = menuItems[0]
     val title = remember { mutableStateOf(firstMenu.menu_name) }
     val selectedIndex = remember { mutableStateOf(defaultSelectIndex) }
+
     DismissibleNavigationDrawer(
         modifier = modifier
             .windowInsetsPadding(ScaffoldDefaults.contentWindowInsets)
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(8.dp)
-            ),
+            .background(Color.White, shape = RoundedCornerShape(8.dp)),
         drawerState = drawerState,
         drawerContent = {
             DismissibleDrawerSheet {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(
-                            top = 16.dp,
-                            bottom = 16.dp,
-                        )
+                        .padding(top = 16.dp, bottom = 16.dp)
                 ) {
                     Row(
                         modifier = Modifier
-                            .padding(
-                                start = 16.dp,
-                                end = 16.dp
-                            )
+                            .padding(start = 16.dp, end = 16.dp)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Start
@@ -140,24 +140,21 @@ fun NavigationDrawer(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .size(32.dp)
-                                .clip(shape = RoundedCornerShape(8.dp)),
+                                .clip(RoundedCornerShape(8.dp)),
                             painter = painterResource(Res.drawable.logo),
                             contentDescription = ""
                         )
+
                         Text(
-                            text = "ChatBox", modifier = Modifier
-                                .padding(start = 8.dp)
+                            text = "ChatBox",
+                            modifier = Modifier.padding(start = 8.dp)
                         )
                     }
-                    HorizontalDivider(
-                        modifier = Modifier
-                            .padding(top = 16.dp, bottom = 16.dp)
-                    )
-                    LazyColumn(
-                        modifier = Modifier
-                            .weight(1f)
-                    ) {
-                        items(menuItems.size) { index ->
+
+                    HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                    LazyColumn(modifier = Modifier.weight(1f)) {
+                        items(count = menuItems.size) { index ->
                             ChatBoxDrawerItem(
                                 item = menuItems[index],
                                 isSelected = selectedIndex.value == index,
@@ -169,24 +166,18 @@ fun NavigationDrawer(
                                         drawerController.navigate(messageRoute.route)
                                         drawerState.close()
                                     }
-                                })
+                                }
+                            )
+
                             if (index < menuItems.size - 1) {
-                                VerticalDivider(
-                                    modifier = Modifier.padding(
-                                        top = 16.dp,
-                                    )
-                                )
+                                VerticalDivider(modifier = Modifier.padding(top = 16.dp))
                             }
                         }
                     }
-                    Column(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                    ) {
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .padding(top = 16.dp, bottom = 16.dp)
-                        )
+
+                    Column(modifier = Modifier.wrapContentHeight()) {
+                        HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
                         ChatBoxDrawerItem(
                             item = Menu(stringResource(Res.string.settings)),
                             onClick = {
@@ -237,6 +228,9 @@ fun NavigationDrawer(
     }
 }
 
+/**
+ * 聊天盒抽屉项组件
+ */
 @Composable
 fun ChatBoxDrawerItem(
     modifier: Modifier = Modifier,
@@ -257,12 +251,13 @@ fun ChatBoxDrawerItem(
             }
         },
         shape = RoundedCornerShape(8.dp),
-        onClick = {
-            onClick(item)
-        }
+        onClick = { onClick(item) }
     )
 }
 
+/**
+ * 设置导航配置
+ */
 @Composable
 fun NavigationSetup(drawerController: NavHostController, menu: Menu) {
     NavHost(navController = drawerController, startDestination = "message/${menu._id}") {

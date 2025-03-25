@@ -26,21 +26,39 @@ import com.peihua.chatbox.shared.theme.ThemeMode
 
 private lateinit var appRouter: NavHostController
 
+/**
+ * 返回上一页
+ */
 fun navigateBack() {
     check(::appRouter.isInitialized)
     appRouter.navigateUp()
 }
 
+/**
+ * 弹出当前页面
+ */
 fun popBackStack() {
     check(::appRouter.isInitialized)
     appRouter.popBackStack()
 }
 
+/**
+ * 跳转到指定路由
+ *
+ * @param route 目标路由
+ */
 fun navigateTo(route: String) {
     check(::appRouter.isInitialized)
     appRouter.navigate(route)
 }
 
+/**
+ * 跳转到指定路由（泛型版本）
+ *
+ * @param route 目标路由
+ * @param navOptions 导航选项
+ * @param navigatorExtras 导航额外参数
+ */
 fun <T : Any> navigateTo(
     route: T, navOptions: NavOptions? = null,
     navigatorExtras: Navigator.Extras? = null,
@@ -50,11 +68,24 @@ fun <T : Any> navigateTo(
 
 }
 
+/**
+ * 使用构建器跳转到指定路由
+ *
+ * @param route 目标路由
+ * @param builder 构建器
+ */
 fun navigateTo(route: String, builder: NavOptionsBuilder.() -> Unit) {
     check(::appRouter.isInitialized)
     appRouter.navigate(route, builder)
 }
 
+/**
+ * 导航到指定路由
+ *
+ * @param route 目标路由
+ * @param navOptions 导航选项
+ * @param navigatorExtras 导航额外参数
+ */
 fun navigate(
     route: String,
     navOptions: NavOptions? = null,
@@ -64,11 +95,18 @@ fun navigate(
     appRouter.navigate(route, navOptions, navigatorExtras)
 }
 
+/**
+ * 主应用组件
+ *
+ * @param modifier 修饰符
+ * @param theme 主题设置
+ */
 @Composable
 fun ChatBoxApp(
     modifier: Modifier = Modifier,
     theme: (themeMode: ThemeMode, colorScheme: ColorScheme) -> Unit = { model, colorScheme -> },
 ) {
+    // 记住导航控制器实例
     val navController = rememberNavController()
     appRouter = navController
     ChatBoxTheme { model, colorScheme ->

@@ -14,18 +14,24 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,42 +48,97 @@ import com.peihua.chatbox.shared.components.stateView.ErrorView
 import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.db.ChatBoxMessage
 import com.peihua.chatbox.shared.db.UserType
+import com.peihua.chatbox.shared.utils.DLog
 import com.peihua.chatbox.shared.viewmodel.MessageViewModel
 import com.peihua.chatbox.shared.utils.ResultData
+import com.peihua.chatbox.shared.utils.dLog
+import com.peihua.chatbox.shared.viewmodel.UiAction
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.toCollection
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+
+@Composable
+fun <T> Flow<T>.collectAsLazyItems(
+    context: CoroutineContext = EmptyCoroutineContext,
+): SnapshotStateList<T> {
+
+    val lazyPagingItems = remember { mutableStateListOf<T>() }
+
+    LaunchedEffect(lazyPagingItems) {
+        if (context == EmptyCoroutineContext) {
+            toCollection(lazyPagingItems)
+        } else {
+            withContext(context) {
+                toCollection(lazyPagingItems)
+            }
+        }
+    }
+    return lazyPagingItems
+}
+
 
 @Composable
 fun MessageScreen(
     menuId: Long, modifier: Modifier = Modifier,
     viewModel: MessageViewModel = viewModel(MessageViewModel::class),
 ) {
-    val resultData = viewModel.listMsgState
-    val data = resultData.value
-    when (data) {
-        is ResultData.Initialize -> viewModel.requestAllMessagesByMenuId(menuId)
-        is ResultData.Success -> {
-            val msgItems = (resultData.value as ResultData.Success).data
-            MessageContent(modifier, msgItems) {
-                viewModel.sendMessage(menuId, it)
-            }
+    val resultData = viewModel.pagingDataFlow.collectAsLazyItems()
+    val rState = remember { mutableStateOf(resultData) }
+//    if (rState.value.isEmpty()) {
+//        LoadingView()
+//        DLog { "MessageScreen>>>>>> load messages" }
+//        viewModel.userAction(UiAction.LoadMessages(menuId))
+//    } else {
+        MessageContent(modifier, resultData,{
+            viewModel. dLog { "MessageScreen>>>>>> load messages" }
+            viewModel.userAction(UiAction.SendMsg(menuId,""))
+        }) {
+            viewModel.userAction(UiAction.SendMsg(menuId, it))
         }
-
-        is ResultData.Starting -> LoadingView()
-        is ResultData.Failure -> ErrorView {
-            viewModel.requestMessageById(menuId)
-        }
-    }
+//    }
+//    val resultData = viewModel.listMsgState
+//    val data = resultData.value
+//    when (data) {
+//        is ResultData.Initialize -> viewModel.userAction(UiAction.LoadMessages(menuId))
+//        is ResultData.Success -> {
+//            val msgItems = resultDa
+//            MessageContent(modifier, msgItems) {
+//                viewModel.userAction(UiAction.SendMsg(menuId, it))
+//            }
+//        }
+//
+//        is ResultData.Starting -> LoadingView()
+//        is ResultData.Failure -> ErrorView {
+//            viewModel.userAction(UiAction.LoadMessages(menuId))
+////            viewModel.requestMessageById(menuId)
+//        }
+//    }
 }
 
 @Composable
-fun MessageContent(modifier: Modifier = Modifier, msgItems: List<ChatBoxMessage>, sendMsg: (String) -> Unit) {
+fun MessageContent(
+    modifier: Modifier = Modifier,
+    msgItems: List<ChatBoxMessage>,
+    refresh: () -> Unit,
+    sendMsg: (String) -> Unit,
+) {
     val inputContent = remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
     Box(
         modifier = Modifier
     ) {
         Column {
+           Button(onClick = {
+              refresh()
+           }) {
+               Text(text = "刷新数据")
+           }
             LazyColumn(
+                state = listState,
                 modifier = modifier
                     .fillMaxWidth()
                     .background(Color(241, 241, 241))
@@ -89,7 +150,9 @@ fun MessageContent(modifier: Modifier = Modifier, msgItems: List<ChatBoxMessage>
             }
             Row(
                 modifier = Modifier
+                    .padding(top = 8.dp)
                     .wrapContentHeight()
+
             ) {
                 OutlinedTextField(
                     value = inputContent.value,
@@ -100,10 +163,18 @@ fun MessageContent(modifier: Modifier = Modifier, msgItems: List<ChatBoxMessage>
                 )
                 IconButton({
                     sendMsg(inputContent.value)
+                    inputContent.value = ""
                 }) {
                     Icon(Icons.Default.Send, contentDescription = "")
                 }
 
+            }
+            // 监听消息变化并滚动到底部
+            LaunchedEffect(msgItems.size) {
+                if (msgItems.isNotEmpty()) {
+                    // 滚动到最后一项
+                    listState.animateScrollToItem(msgItems.size - 1)
+                }
             }
         }
 
@@ -120,7 +191,7 @@ fun MessageItem(modifier: Modifier = Modifier, item: ChatBoxMessage) {
 fun ChatBubble(
     item: ChatBoxMessage,
     isUser: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // 根据消息类型设置气泡颜色和对齐方式
     val bubbleColor = if (isUser) Color(0xFF007AFF) else Color(0xFFE5E5EA)
