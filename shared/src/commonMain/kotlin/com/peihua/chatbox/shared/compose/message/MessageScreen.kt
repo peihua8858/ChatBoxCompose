@@ -18,8 +18,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -27,7 +26,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,14 +42,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.logo
 import coil3.compose.AsyncImage
-import com.peihua.chatbox.shared.components.stateView.ErrorView
 import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.db.ChatBoxMessage
 import com.peihua.chatbox.shared.db.UserType
-import com.peihua.chatbox.shared.utils.DLog
-import com.peihua.chatbox.shared.viewmodel.MessageViewModel
-import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.utils.dLog
+import com.peihua.chatbox.shared.viewmodel.MessageViewModel
 import com.peihua.chatbox.shared.viewmodel.UiAction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.toCollection
@@ -87,36 +82,12 @@ fun MessageScreen(
     viewModel: MessageViewModel = viewModel(MessageViewModel::class),
 ) {
     val resultData = viewModel.pagingDataFlow.collectAsLazyItems()
-    val rState = remember { mutableStateOf(resultData) }
-//    if (rState.value.isEmpty()) {
-//        LoadingView()
-//        DLog { "MessageScreen>>>>>> load messages" }
-//        viewModel.userAction(UiAction.LoadMessages(menuId))
-//    } else {
-        MessageContent(modifier, resultData,{
-            viewModel. dLog { "MessageScreen>>>>>> load messages" }
-            viewModel.userAction(UiAction.SendMsg(menuId,""))
-        }) {
-            viewModel.userAction(UiAction.SendMsg(menuId, it))
-        }
-//    }
-//    val resultData = viewModel.listMsgState
-//    val data = resultData.value
-//    when (data) {
-//        is ResultData.Initialize -> viewModel.userAction(UiAction.LoadMessages(menuId))
-//        is ResultData.Success -> {
-//            val msgItems = resultDa
-//            MessageContent(modifier, msgItems) {
-//                viewModel.userAction(UiAction.SendMsg(menuId, it))
-//            }
-//        }
-//
-//        is ResultData.Starting -> LoadingView()
-//        is ResultData.Failure -> ErrorView {
-//            viewModel.userAction(UiAction.LoadMessages(menuId))
-////            viewModel.requestMessageById(menuId)
-//        }
-//    }
+    MessageContent(modifier, resultData, {
+        viewModel.dLog { "MessageScreen>>>>>> load messages" }
+        viewModel.userAction(UiAction.QueryOrSendMsg(menuId, ""))
+    }) {
+        viewModel.userAction(UiAction.QueryOrSendMsg(menuId, it))
+    }
 }
 
 @Composable
@@ -128,15 +99,15 @@ fun MessageContent(
 ) {
     val inputContent = remember { mutableStateOf("") }
     val listState = rememberLazyListState()
+    if (msgItems.isEmpty()) {
+        LoadingView()
+        refresh()
+      return
+    }
     Box(
         modifier = Modifier
     ) {
         Column {
-           Button(onClick = {
-              refresh()
-           }) {
-               Text(text = "刷新数据")
-           }
             LazyColumn(
                 state = listState,
                 modifier = modifier
@@ -165,7 +136,7 @@ fun MessageContent(
                     sendMsg(inputContent.value)
                     inputContent.value = ""
                 }) {
-                    Icon(Icons.Default.Send, contentDescription = "")
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "")
                 }
 
             }
