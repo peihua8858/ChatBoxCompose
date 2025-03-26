@@ -1,14 +1,21 @@
 package com.peihua.chatbox.shared.viewmodel
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.peihua.chatbox.shared.db.AppDatabase
-import com.peihua.chatbox.shared.db.ChatBoxMessage
-import com.peihua.chatbox.shared.db.DatabaseHelper
-import com.peihua.chatbox.shared.db.Menu
-import com.peihua.chatbox.shared.db.Message
-import com.peihua.chatbox.shared.db.MessageQueries
+import com.peihua.chatbox.shared.data.db.AppDatabase
+import com.peihua.chatbox.shared.data.db.ChatBoxMessage
+import com.peihua.chatbox.shared.data.db.DatabaseHelper
+import com.peihua.chatbox.shared.data.db.Menu
+import com.peihua.chatbox.shared.data.db.Message
+import com.peihua.chatbox.shared.data.db.MessageQueries
+import com.peihua.chatbox.shared.data.remote.repository.ChatAiRepository
+import com.peihua.chatbox.shared.data.remote.repository.impl.OpenAiRepositoryImpl
 import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.utils.dLog
 import com.peihua.chatbox.shared.utils.request
@@ -26,21 +33,22 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class MessageViewModel(
     val database: AppDatabase = DatabaseHelper.database,
     val messageQueries: MessageQueries = database.messageQueries,
+    val repository: ChatAiRepository = OpenAiRepositoryImpl(),
 ) : ViewModel() {
     val updateState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
     val selMsgState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
 
+    val enInputState = mutableStateOf(true)
     val mUiState: StateFlow<UiState>
     val userAction: (UiAction) -> Unit
     val pagingDataFlow: Flow<ChatBoxMessage>
@@ -87,6 +95,7 @@ class MessageViewModel(
                 hasNotScrolledForCurrentSearch = sendMsgAction.query != scrollAction.currentQuery
             )
         }
+
         // 组合 UI 状态
         mUiState = combineFlow.flowOn(Dispatchers.IO)
             .stateIn(
@@ -112,43 +121,28 @@ class MessageViewModel(
                 val result = selectAllByMenuId(menuId)
                 result.map { it.ChatBoxMessage() }.forEach { emit(it) }
             } else {
+                enInputState.value = false
                 // 在这里处理你的消息发送并更新数据库
                 val userMsg = ChatBoxMessage(menuId, message, isUser = true)
                 emit(userMsg) // 替换为相应的消息对象
                 insertMessage(Message(menuId, message, true), menuId)
-                var dbMsg = insertMessage(Message(menuId, "", false), menuId)
-                val sysMsg = ChatBoxMessage(menuId, "", isUser = false)
-                getAIResponseStream(message)
-                    .onEach { aiResponse ->
-                        if (sysMsg.message.value.isEmpty()) {
-                            emit(sysMsg)
+                var dbMsg = insertMessage(Message(menuId, "Let me thinking...", false), menuId)
+                val sysMsg = ChatBoxMessage(menuId, "Let me thinking...", isUser = false)
+                emit(sysMsg)
+                repository.textCompletionsWithStream(message)
+                    .onCompletion {
+                        enInputState.value = true
+                    }
+                    .collect { aiResponse ->
+                        dLog { ">>>>>>AI Response: $aiResponse" }
+                        if (sysMsg.message.value == "Let me thinking...") {
+                            // 更新最后一条消息（AI 的回复）
+                            sysMsg.message.value = aiResponse
+                        } else {
+                            sysMsg.message.value += aiResponse
                         }
-                        // 更新最后一条消息（AI 的回复）
-                        sysMsg.message.value += aiResponse
                         dbMsg = updateMessage(dbMsg.copy(content = sysMsg.message.value))
-                    }.last()
-            }
-        }
-    }
-
-    // 模拟 AI 返回的流式数据
-    private fun getAIResponseStream(message: String): Flow<String> {
-        return flow {
-            // 模拟流式返回数据
-            val responseParts = listOf(
-                "AI: 这是",
-                "对你的",
-                "流式回复",
-                "AI: 这是",
-                "对你的",
-                "流式回复",
-                "AI: 这是",
-                "对你的",
-                "流式回复"
-            )
-            responseParts.forEach { part ->
-                emit(part)
-                delay(500) // 模拟延迟
+                    }
             }
         }
     }
@@ -245,7 +239,7 @@ class MessageViewModel(
 }
 
 sealed class UiAction() {
-    data class QueryOrSendMsg(val menuId: Long, val query: String) : UiAction()
+    data class QueryOrSendMsg(val menuId: Long, val query: String = "") : UiAction()
     data class Scroll(val menuId: Long, val currentQuery: String) : UiAction()
 }
 

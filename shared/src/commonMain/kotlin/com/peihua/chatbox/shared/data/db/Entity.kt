@@ -1,8 +1,10 @@
-package com.peihua.chatbox.shared.db
+package com.peihua.chatbox.shared.data.db
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.peihua.chatbox.shared.currentTimeMillis
+import com.peihua.chatbox.shared.data.db.Menu
+import com.peihua.chatbox.shared.data.db.Message
 
 enum class UserType(val value: Long) {
     USER(1),

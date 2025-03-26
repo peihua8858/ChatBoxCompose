@@ -55,7 +55,7 @@ import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.compose.ScreenRouter
 import com.peihua.chatbox.shared.compose.message.MessageScreen
 import com.peihua.chatbox.shared.compose.navigateTo
-import com.peihua.chatbox.shared.db.Menu
+import com.peihua.chatbox.shared.data.db.Menu
 import com.peihua.chatbox.shared.viewmodel.HomeViewModel
 import com.peihua.chatbox.shared.utils.ResultData
 import kotlinx.coroutines.launch

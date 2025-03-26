@@ -30,6 +30,7 @@ sealed class ResultData<T> {
 }
 
 private const val TAG = "ResultData"
+
 @OptIn(ExperimentalContracts::class)
 fun <T> ResultData<T>.isInitialize(): Boolean {
     contract {
@@ -37,6 +38,7 @@ fun <T> ResultData<T>.isInitialize(): Boolean {
     }
     return this is ResultData.Initialize
 }
+
 @OptIn(ExperimentalContracts::class)
 fun <T> ResultData<T>.isSuccess(): Boolean {
     contract {

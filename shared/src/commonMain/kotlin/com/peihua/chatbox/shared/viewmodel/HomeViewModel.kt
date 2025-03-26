@@ -2,10 +2,10 @@ package com.peihua.chatbox.shared.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.peihua.chatbox.shared.db.AppDatabase
-import com.peihua.chatbox.shared.db.DatabaseHelper
-import com.peihua.chatbox.shared.db.Menu
-import com.peihua.chatbox.shared.db.MenuQueries
+import com.peihua.chatbox.shared.data.db.AppDatabase
+import com.peihua.chatbox.shared.data.db.DatabaseHelper
+import com.peihua.chatbox.shared.data.db.Menu
+import com.peihua.chatbox.shared.data.db.MenuQueries
 import com.peihua.chatbox.shared.http.HttpClient
 import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.utils.request
