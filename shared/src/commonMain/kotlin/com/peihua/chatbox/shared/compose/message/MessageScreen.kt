@@ -56,9 +56,13 @@ import com.mikepenz.markdown.compose.elements.MarkdownHighlightedCodeBlock
 import com.mikepenz.markdown.compose.elements.MarkdownHighlightedCodeFence
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
+import com.peihua.chatbox.shared.components.stateView.ErrorView
+import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.UserType
+import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.viewmodel.MessageViewModel
+import com.peihua.chatbox.shared.viewmodel.MessageViewModel2
 import com.peihua.chatbox.shared.viewmodel.UiAction
 import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxThemes
@@ -96,24 +100,63 @@ fun MessageScreen(
     menuId: Long, modifier: Modifier = Modifier,
     viewModel: MessageViewModel = viewModel(MessageViewModel::class),
 ) {
+    val resultData = viewModel.messages.value
+    //请求数据
+    val refresh = {
+        viewModel.queryAllMessagesByMenuId(menuId)
+    }
+    //发送消息
+    val sendMessage = { query: String ->
+        viewModel.sendMessageByMenuId(menuId, query)
+    }
+    when (resultData) {
+        is ResultData.Success -> {
+            Box(
+                modifier = Modifier
+            ) {
+                Column {
+                    MessageList(modifier = modifier.weight(1f), resultData.data)
+                    InputText(modifier = Modifier, viewModel.enInputState.value, sendMessage)
+                }
+            }
+        }
+
+        is ResultData.Failure -> {
+            ErrorView { refresh() }
+        }
+
+        is ResultData.Initialize -> {
+            refresh()
+        }
+
+        is ResultData.Starting -> {
+            LoadingView()
+        }
+    }
+}
+
+@Composable
+fun MessageScreen2(
+    menuId: Long, modifier: Modifier = Modifier,
+    viewModel: MessageViewModel2 = viewModel(MessageViewModel2::class),
+) {
     val resultData = viewModel.pagingDataFlow.collectAsLazyItems()
     val refresh = {
         viewModel.userAction(UiAction.QueryOrSendMsg(menuId))
     }
+    val sendMessage = { query: String ->
+        viewModel.userAction(UiAction.QueryOrSendMsg(menuId, query))
+    }
+
     if (resultData.isEmpty()) {
-        refresh()
+        LaunchedEffect(resultData) { refresh() }
     }
     Box(
         modifier = Modifier
     ) {
         Column {
-            MessageList(
-                modifier =
-                    modifier.weight(1f), resultData
-            )
-            InputText(modifier = Modifier, viewModel.enInputState.value) {
-                viewModel.userAction(UiAction.QueryOrSendMsg(menuId, it))
-            }
+            MessageList(modifier = modifier.weight(1f), resultData)
+            InputText(modifier = Modifier, viewModel.enInputState.value, sendMessage)
         }
     }
 }
@@ -155,7 +198,11 @@ fun InputText(modifier: Modifier, isEnabled: Boolean, sendMsg: (String) -> Unit)
                             sendMsg(inputContent.value)
                             inputContent.value = ""
                         }) {
-                        Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "")
+                        Icon(
+                            Icons.AutoMirrored.Filled.Send,
+                            tint = MaterialTheme.colorScheme.primary,
+                            contentDescription = ""
+                        )
                     }
 
                 }
@@ -165,7 +212,7 @@ fun InputText(modifier: Modifier, isEnabled: Boolean, sendMsg: (String) -> Unit)
 }
 
 @Composable
-fun MessageList(modifier: Modifier = Modifier, resultData: SnapshotStateList<ChatBoxMessage>) {
+fun MessageList(modifier: Modifier = Modifier, resultData: List<ChatBoxMessage>) {
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,

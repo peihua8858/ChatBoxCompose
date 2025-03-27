@@ -1,13 +1,12 @@
 package com.peihua.chatbox.shared.viewmodel
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peihua.chatbox.shared.data.db.AppDatabase
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.DatabaseHelper
+import com.peihua.chatbox.shared.data.db.Menu
 import com.peihua.chatbox.shared.data.db.Message
 import com.peihua.chatbox.shared.data.db.MessageQueries
 import com.peihua.chatbox.shared.data.remote.repository.ChatAiRepository
@@ -17,23 +16,92 @@ import com.peihua.chatbox.shared.utils.dLog
 import com.peihua.chatbox.shared.utils.request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MessageViewModel(
+class MessageViewModel2(
     val database: AppDatabase = DatabaseHelper.database,
     val messageQueries: MessageQueries = database.messageQueries,
     val repository: ChatAiRepository = OpenAiRepositoryImpl(),
 ) : ViewModel() {
-    val enInputState = mutableStateOf(true)
+    val updateState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
+    val selMsgState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
 
-    private val _messages = mutableStateListOf<ChatBoxMessage>()
-    val messages: MutableState<ResultData<List<ChatBoxMessage>>> =
-        mutableStateOf(ResultData.Initialize())
+    val enInputState = mutableStateOf(true)
+    val mUiState: StateFlow<UiState>
+    val userAction: (UiAction) -> Unit
+    val pagingDataFlow: Flow<ChatBoxMessage>
+
+    init {
+        val actionStateFlow = MutableSharedFlow<UiAction>()
+        // 发送消息的流
+        val sendMsgAction = actionStateFlow
+            .filterIsInstance<UiAction.QueryOrSendMsg>()
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+            .catch { e ->
+                dLog { "Error in stream: ${e.message}" }  // 日志输出
+            }
+
+        val scrollAction = actionStateFlow
+            .filterIsInstance<UiAction.Scroll>()
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000), 1)
+
+        // 处理发送消息的流
+        pagingDataFlow = sendMsgAction
+            .flatMapLatest {
+                dLog { "MessageViewModel>>>>>> load messages>>$it" }
+                sendMessage(it.menuId, it.query)
+            } // 替换为你的发送消息的函数
+            .flowOn(Dispatchers.IO)
+            .catch { e ->
+                dLog { "Error in stream: ${e.message}" }  // 日志输出
+            }
+        // 组合 UI 状态
+        val combineFlow = combine(
+            sendMsgAction,
+            scrollAction,
+        ) { sendMsgAction, scrollAction ->
+            UiState(
+                menuId = sendMsgAction.menuId,
+                query = sendMsgAction.query,
+                lastMeuId = scrollAction.menuId,
+                lastQueryScrolled = scrollAction.currentQuery,
+                hasNotScrolledForCurrentSearch = sendMsgAction.query != scrollAction.currentQuery
+            )
+        }
+
+        // 组合 UI 状态
+        mUiState = combineFlow.flowOn(Dispatchers.IO)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000),
+                UiState(menuId = 0L, query = "", lastMeuId = 0L, lastQueryScrolled = "")// 初始化状态
+            )
+        // 用户动作的处理
+        userAction = {
+            viewModelScope.launch {
+                dLog { "User Action Triggered: $it" }  // 添加调试日志
+                actionStateFlow.emit(it)
+            }
+        }
+    }
 
     // 发送消息方法
     private fun sendMessage(menuId: Long, message: String): Flow<ChatBoxMessage> {
@@ -69,21 +137,41 @@ class MessageViewModel(
         }
     }
 
-    fun queryAllMessagesByMenuId(menuId: Long) {
-        request(messages) {
-            delay(2000)
-            val result = selectAllByMenuId(menuId)
-            result.map { it.ChatBoxMessage() }.forEach { _messages.add(0,it)}
-            _messages
+    fun requestMessageById(messageId: Long) {
+        request(selMsgState) {
+            selectMessageById(messageId)
         }
     }
 
-    fun sendMessageByMenuId(menuId: Long, message: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            sendMessage(menuId, message).collect {
-                _messages.add(0,it)
-            }
-            _messages
+    fun updateMessageContent(message: Message) {
+        request(updateState) {
+            messageQueries.updateMessageContentById(
+                message.content,
+                message.update_time,
+                message._id
+            )
+            message
+        }
+    }
+
+    fun updateMessageMenuById(messageId: Long, menu: Menu) {
+        request(updateState) {
+            messageQueries.updateMessageMenuById(menu._id, menu.update_time, messageId)
+            selectMessageById(messageId)
+        }
+    }
+
+    fun insertMessage(message: Message, menu: Menu) {
+        request(updateState) {
+            messageQueries.insertMessage(
+                menu._id,
+                message.user_type,
+                message.content,
+                message.create_time,
+                message.update_time
+            )
+            val lastInsertedId = messageQueries.lastInsertId().executeAsOne()
+            selectMessageById(lastInsertedId)
         }
     }
 
@@ -140,15 +228,3 @@ class MessageViewModel(
     }
 }
 
-sealed class UiAction() {
-    data class QueryOrSendMsg(val menuId: Long, val query: String = "") : UiAction()
-    data class Scroll(val menuId: Long, val currentQuery: String) : UiAction()
-}
-
-data class UiState(
-    val menuId: Long,
-    val query: String,
-    val lastMeuId: Long,
-    val lastQueryScrolled: String,
-    val hasNotScrolledForCurrentSearch: Boolean = false,
-)
