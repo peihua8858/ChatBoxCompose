@@ -1,8 +1,5 @@
 package com.peihua.chatbox.shared.compose.settings.tabs.model
 
-import androidx.compose.runtime.Composable
-import chatboxcompose.shared.generated.resources.Res
-import org.jetbrains.compose.resources.stringResource
 
 enum class ModelProvider(val host: String) {
     /**
@@ -19,12 +16,14 @@ enum class ModelProvider(val host: String) {
      * Gemini
      */
     Gemini("https://api.gemini.com");
+
     val displayName: String
         get() = name
 }
 
 data class Model(
     val provider: ModelProvider,
+    val host: String = provider.host,
     val model: String = "gpt-3.5-turbo",
     val apiKey: String = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
     val temperature: Float = 0.7f,

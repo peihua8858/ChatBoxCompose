@@ -25,6 +25,7 @@ import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.language
 import chatboxcompose.shared.generated.resources.settingsModelProvider
 import chatboxcompose.shared.generated.resources.settingsModelProviderOpenAI
+import chatboxcompose.shared.generated.resources.settingsModelProviderOpenAIHost
 import com.peihua.chatbox.shared.compose.settings.tabs.display.displayName
 import com.peihua.chatbox.shared.utils.DLog
 import org.jetbrains.compose.resources.stringResource
@@ -40,7 +41,8 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
         Model(ModelProvider.DeepSeek),
         Model(ModelProvider.Gemini)
     )
-    val apiKey = remember { mutableStateOf("") }
+    val apiKey = remember { mutableStateOf(selectedOption.value.apiKey) }
+    val hostState = remember { mutableStateOf(selectedOption.value.host) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -52,7 +54,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
             onExpandedChange = { isExpanded.value = it },
         ) {
             OutlinedTextField(
-                value = selectedOption.value.provider.displayName,
+                value = selectedOption.value.provider.name,
                 onValueChange = {
                 },
                 label = { Text(stringResource(Res.string.settingsModelProvider)) },
@@ -74,7 +76,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                             .background(if (selected) colorScheme.secondaryContainer else Color.Transparent),
                         text = {
                             Text(
-                                text = item.provider.displayName,
+                                text = item.provider.name,
                                 color = if (selected) colorScheme.onSecondaryContainer else colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -90,9 +92,20 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
         OutlinedTextField(
             value = apiKey.value,
             onValueChange = {
-                selectedOption.value = selectedOption.value.copy(model = it)
+                apiKey.value = it
+                selectedOption.value = selectedOption.value.copy(apiKey = it)
             },
             label = { Text(stringResource(Res.string.settingsModelProviderOpenAI)) },
+            textStyle = MaterialTheme.typography.labelMedium,
+            modifier = Modifier.fillMaxWidth()
+        )
+        OutlinedTextField(
+            value = hostState.value,
+            onValueChange = {
+                hostState.value = it
+                selectedOption.value = selectedOption.value.copy(host = it)
+            },
+            label = { Text(stringResource(Res.string.settingsModelProviderOpenAIHost)) },
             textStyle = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth()
         )
