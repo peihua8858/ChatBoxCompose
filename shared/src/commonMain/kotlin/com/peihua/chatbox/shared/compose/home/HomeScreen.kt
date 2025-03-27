@@ -12,19 +12,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DismissibleDrawerSheet
 import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -61,6 +69,7 @@ import com.peihua.chatbox.shared.utils.ResultData
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.*
+
 /**
  * 主屏幕组件
  */
@@ -71,8 +80,11 @@ fun HomeScreen(
 ) {
     val menusState = viewModel.menusState
     val resultData = menusState.value
+    val requestMenus = {
+        viewModel.requestMenus()
+    }
     when (resultData) {
-        is ResultData.Initialize -> viewModel.requestMenus()
+        is ResultData.Initialize -> requestMenus()
         is ResultData.Starting -> {
             LoadingView()
         }
@@ -80,7 +92,7 @@ fun HomeScreen(
         is ResultData.Success -> {
             val menuItems = resultData.data
             var selectedIndex = 0
-           for ((index, item) in menuItems.withIndex()) {
+            for ((index, item) in menuItems.withIndex()) {
                 if (item.isSelected) {
                     selectedIndex = index
                     break
@@ -89,13 +101,16 @@ fun HomeScreen(
             NavigationDrawer(
                 modifier = modifier,
                 menuItems = menuItems,
+                onEditName = { menuId, menuName ->
+                    viewModel.updateMenuName(menuId, menuName, menuItems)
+                },
                 defaultSelectIndex = selectedIndex
             )
         }
 
         else -> {
             ErrorView {
-                viewModel.requestMenus()
+                requestMenus()
             }
         }
     }
@@ -109,6 +124,7 @@ fun NavigationDrawer(
     modifier: Modifier = Modifier,
     menuItems: List<Menu>,
     defaultSelectIndex: Int,
+    onEditName: (Long, String) -> Unit,
 ) {
     val drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed)
     val drawerController = rememberNavController()
@@ -158,6 +174,10 @@ fun NavigationDrawer(
                             ChatBoxDrawerItem(
                                 item = menuItems[index],
                                 isSelected = selectedIndex.value == index,
+                                updateName = { menuId, menuName ->
+                                    onEditName(menuId, menuName)
+                                    title.value = menuName
+                                },
                                 onClick = { item ->
                                     scope.launch {
                                         title.value = item.menu_name
@@ -236,14 +256,47 @@ fun ChatBoxDrawerItem(
     modifier: Modifier = Modifier,
     item: Menu,
     isSelected: Boolean = false,
+    updateName: (Long, String) -> Unit = { _, _ -> },
     onClick: (Menu) -> Unit,
 ) {
+    val editName = remember { mutableStateOf(item.menu_name) }
+    val isEditName = remember { mutableStateOf(false) }
     NavigationDrawerItem(
         modifier = modifier.padding(
             start = 16.dp,
             end = 16.dp
         ),
-        label = { Text(item.menu_name) },
+        label = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if (isEditName.value) {
+                    OutlinedTextField(value = editName.value, onValueChange = {
+                        editName.value = it
+                    }, modifier = Modifier.weight(1f))
+                } else {
+                    Text(editName.value, modifier = Modifier.weight(1f))
+                }
+                if (isSelected) {
+                    IconButton(onClick = {
+                        isEditName.value = !isEditName.value
+                        if (!isEditName.value) {
+                            updateName(item._id, editName.value)
+                        }
+                    }, modifier = Modifier.padding(start = 8.dp).wrapContentWidth()) {
+                        Icon(
+                            imageVector = if (isEditName.value) Icons.Default.Done else Icons.Default.Edit,
+                            contentDescription = "Avatar",
+                            modifier = Modifier
+                                .size(24.dp) // 头像大小
+                                .clip(CircleShape) // 圆形裁剪
+                                .background(Color.Transparent), // 默认背景色
+                        )
+                    }
+                }
+            }
+        },
         selected = isSelected,
         icon = {
             item.icon?.let {

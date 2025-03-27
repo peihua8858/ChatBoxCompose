@@ -113,3 +113,18 @@ fun <T> ViewModel.request(
         }
     }
 }
+
+/**
+ * [ViewModel]在IO线程中开启协程扩展
+ */
+fun <T> ViewModel.request(
+    request: suspend CoroutineScope.() -> T,
+) {
+    viewModelScope.launch(Dispatchers.IO) {
+        try {
+            request()
+        } catch (e: Throwable) {
+            print(e.stackTraceToString())
+        }
+    }
+}

@@ -2,24 +2,23 @@ package com.peihua.chatbox.shared.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.peihua.chatbox.shared.currentTimeMillis
 import com.peihua.chatbox.shared.data.db.AppDatabase
 import com.peihua.chatbox.shared.data.db.DatabaseHelper
 import com.peihua.chatbox.shared.data.db.Menu
 import com.peihua.chatbox.shared.data.db.MenuQueries
-import com.peihua.chatbox.shared.http.HttpClient
 import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.utils.request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import com.peihua.chatbox.shared.utils.set
 
 class HomeViewModel(
     val database: AppDatabase = DatabaseHelper.database,
-    val menuQueries: MenuQueries = database.menuQueries
+    val menuQueries: MenuQueries = database.menuQueries,
 ) : ViewModel() {
     val menusState = mutableStateOf<ResultData<List<Menu>>>(ResultData.Initialize())
-    val httpClient by lazy { HttpClient { } }
-
     fun requestMenus() {
         request(menusState) {
             val result = selectAllMenus()
@@ -51,9 +50,29 @@ class HomeViewModel(
         }
     }
 
+    fun updateMenuName(menuId: Long, name: String, menuItems: List<Menu>) {
+        request {
+            menuQueries.updateMenuById(name, currentTimeMillis(), menuId)
+            if (menuItems.isNotEmpty()) {
+                for ((index, item) in menuItems.withIndex()) {
+                    if (item._id == menuId) {
+                        menuItems[index] = Menu(name)
+                        break
+                    }
+                }
+            }
+        }
+    }
+
     suspend fun insetMenu(menu: Menu) {
         return withContext(Dispatchers.IO) {
-            menuQueries.insertMenu(menu.menu_name, menu.isDefault, menu.icon, menu.create_time, menu.update_time)
+            menuQueries.insertMenu(
+                menu.menu_name,
+                menu.isDefault,
+                menu.icon,
+                menu.create_time,
+                menu.update_time
+            )
         }
     }
 

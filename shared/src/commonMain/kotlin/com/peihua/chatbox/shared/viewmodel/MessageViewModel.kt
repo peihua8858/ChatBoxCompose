@@ -30,7 +30,6 @@ class MessageViewModel(
     val repository: ChatAiRepository = OpenAiRepositoryImpl(),
 ) : ViewModel() {
     val enInputState = mutableStateOf(true)
-
     private val _messages = mutableStateListOf<ChatBoxMessage>()
     val messages: MutableState<ResultData<List<ChatBoxMessage>>> =
         mutableStateOf(ResultData.Initialize())
@@ -69,9 +68,14 @@ class MessageViewModel(
         }
     }
 
+    /**
+     * 查询所有消息
+     * @param menuId 菜单id
+     */
     fun queryAllMessagesByMenuId(menuId: Long) {
         request(messages) {
             delay(2000)
+            _messages.clear()
             val result = selectAllByMenuId(menuId)
             result.map { it.ChatBoxMessage() }.forEach { _messages.add(0,it)}
             _messages
@@ -83,7 +87,6 @@ class MessageViewModel(
             sendMessage(menuId, message).collect {
                 _messages.add(0,it)
             }
-            _messages
         }
     }
 
