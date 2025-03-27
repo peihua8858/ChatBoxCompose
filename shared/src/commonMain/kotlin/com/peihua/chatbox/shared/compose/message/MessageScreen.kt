@@ -15,25 +15,22 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material3.Divider
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,15 +38,13 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.logo
@@ -61,7 +56,6 @@ import com.mikepenz.markdown.compose.elements.MarkdownHighlightedCodeBlock
 import com.mikepenz.markdown.compose.elements.MarkdownHighlightedCodeFence
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
-import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.UserType
 import com.peihua.chatbox.shared.viewmodel.MessageViewModel
@@ -194,13 +188,18 @@ fun MessageItem(modifier: Modifier = Modifier, item: ChatBoxMessage, isLast: Boo
 
 @Composable
 fun MessageCard(message: ChatBoxMessage, isHuman: Boolean = false, isLast: Boolean = false) {
-    Column(
-        horizontalAlignment = if (isHuman) Alignment.End else Alignment.Start,
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .padding(top = if (isLast) 120.dp else 0.dp)
+            .padding(top = if (isLast) 120.dp else 0.dp),
+        horizontalArrangement = if (isHuman) Arrangement.End else Arrangement.Start
     ) {
+        if (!isHuman) {
+            // 显示 AI 头像
+            Avatar(avatar = if (message.icon.isEmpty()) Res.drawable.logo else message.icon)
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Box(
             modifier = Modifier
                 .wrapContentWidth()
@@ -219,6 +218,11 @@ fun MessageCard(message: ChatBoxMessage, isHuman: Boolean = false, isLast: Boole
             } else {
                 BotMessageCard(message = message)
             }
+        }
+        if (isHuman) {
+            Spacer(modifier = Modifier.width(8.dp))
+            // 显示用户头像
+            Avatar(avatar = if (message.icon.isEmpty()) Icons.Default.AccountCircle else message.icon)
         }
     }
 }
@@ -268,52 +272,6 @@ fun BotMessageCard(message: ChatBoxMessage) {
 }
 
 @Composable
-fun ChatBubble(
-    item: ChatBoxMessage,
-    isUser: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    // 根据消息类型设置气泡颜色和对齐方式
-    val bubbleColor = if (isUser) Color(0xFF007AFF) else Color(0xFFE5E5EA)
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start
-    ) {
-        if (!isUser) {
-            // 显示 AI 头像
-            Avatar(avatar = if (item.icon.isEmpty()) Res.drawable.logo else item.icon)
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-
-        // 聊天气泡
-        Surface(
-            shape = RoundedCornerShape(12.dp),
-            color = bubbleColor,
-            shadowElevation = 2.dp
-        ) {
-            Text(
-                text = item.message.value,
-                style = TextStyle(
-                    color = if (isUser) Color.White else Color.Black,
-                    fontSize = 16.sp
-                ),
-                modifier = Modifier
-                    .padding(12.dp)
-            )
-        }
-
-        if (isUser) {
-            Spacer(modifier = Modifier.width(8.dp))
-            // 显示用户头像
-            Avatar(avatar = if (item.icon.isEmpty()) Res.drawable.logo else item.icon)
-        }
-    }
-}
-
-@Composable
 fun Avatar(avatar: Any) {
     if (avatar is DrawableResource) {
         Image(
@@ -322,17 +280,26 @@ fun Avatar(avatar: Any) {
             modifier = Modifier
                 .size(40.dp) // 头像大小
                 .clip(CircleShape) // 圆形裁剪
-                .background(Color.LightGray), // 默认背景色
+                .background(Color.Transparent), // 默认背景色
             contentScale = ContentScale.Crop // 图片裁剪方式
         )
-    } else {
+    } else if (avatar is ImageVector) {
+        Icon(
+            imageVector = avatar,
+            contentDescription = "Avatar",
+            modifier = Modifier
+                .size(40.dp) // 头像大小
+                .clip(CircleShape) // 圆形裁剪
+                .background(Color.Transparent), // 默认背景色
+        )
+    } else if (avatar is String) {
         AsyncImage(
             model = avatar, // 使用资源 ID 加载头像
             contentDescription = "Avatar",
             modifier = Modifier
                 .size(40.dp) // 头像大小
                 .clip(CircleShape) // 圆形裁剪
-                .background(Color.LightGray), // 默认背景色
+                .background(Color.Transparent), // 默认背景色
             contentScale = ContentScale.Crop // 图片裁剪方式
         )
     }
