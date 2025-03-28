@@ -62,8 +62,6 @@ import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.UserType
 import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.viewmodel.MessageViewModel
-import com.peihua.chatbox.shared.viewmodel.MessageViewModel2
-import com.peihua.chatbox.shared.viewmodel.UiAction
 import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxThemes
 import kotlinx.coroutines.flow.Flow
