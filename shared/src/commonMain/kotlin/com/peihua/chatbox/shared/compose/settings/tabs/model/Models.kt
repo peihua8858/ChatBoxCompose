@@ -1,21 +1,33 @@
 package com.peihua.chatbox.shared.compose.settings.tabs.model
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
-enum class ModelProvider(val host: String) {
+
+enum class ModelProvider(
+    val host: String,
+    val contentView: @Composable (modifier: Modifier, model: Model, modelChange: (Model) -> Unit) -> Unit,
+) {
     /**
      * OpenAI
      */
-    OPenAI("https://api.openai.com"),
+    OPenAI("https://api.openai.com", contentView = { modifier, model, modelChange ->
+        OpenAiSettingsContent(modifier, model, modelChange)
+    }),
 
     /**
      * DeepSeek
      */
-    DeepSeek("https://api.deepseek.com"),
+    DeepSeek("https://api.deepseek.com", { modifier, model, modelChange ->
+        DeepSeekSettingsContent(modifier, model, modelChange)
+    }),
 
     /**
      * Gemini
      */
-    Gemini("https://api.gemini.com");
+    Gemini("https://api.gemini.com", { modifier, model, modelChange ->
+        GeminiAiSettingsContent(modifier, model, modelChange)
+    });
 
     val displayName: String
         get() = name
@@ -34,3 +46,13 @@ data class Model(
     val maxTokensToGenerate: Int = 1000,
 
     )
+
+val Chat_Models: ArrayList<Model>
+    get() {
+        val values = ModelProvider.entries
+        val result = ArrayList<Model>()
+        for (value in values) {
+            result.add(Model(value))
+        }
+        return result
+    }

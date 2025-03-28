@@ -1,20 +1,13 @@
 package com.peihua.chatbox.shared.compose.settings.tabs.display
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brightness4
@@ -30,9 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.SliderDefaults.Track
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
@@ -43,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.dark_mode
@@ -56,6 +45,7 @@ import chatboxcompose.shared.generated.resources.settingsShowWordCount
 import chatboxcompose.shared.generated.resources.system_mode
 import chatboxcompose.shared.generated.resources.text_font_size
 import chatboxcompose.shared.generated.resources.theme
+import com.peihua.chatbox.shared.components.ChatBoxSliderTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
 import com.peihua.chatbox.shared.localeProvider
 import com.peihua.chatbox.shared.theme.ThemeMode
@@ -120,74 +110,15 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 }
             }
         }
-        val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-        val colors = SliderDefaults.colors(
-            thumbColor = MaterialTheme.colorScheme.primary,
-            activeTrackColor = MaterialTheme.colorScheme.primary,
-            inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Text(text = stringResource(Res.string.text_font_size))
-            Slider(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                value = sliderPosition.floatValue,
-                onValueChange = { sliderPosition.floatValue = it },
-                colors = colors,
-                steps = 2,
-                valueRange = 0.5f..2f,
-                interactionSource = interactionSource,
-                thumb = {
-                    Box(modifier = Modifier.height(100.dp)) {
-                        // Custom thumb with tooltip
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Top
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        color = MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(5.dp)
-                                    )
-                                    .padding(4.dp)
-                            ) {
-                                Text(
-                                    style = MaterialTheme.typography.labelLarge,
-                                    text = textScalerData.textScalerName,
-                                    color = MaterialTheme.colorScheme.onPrimary,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .padding(4.dp)
-                                        .width(40.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Box(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(20.dp)
-                                    )
-                            )
-                        }
-                    }
-                },
-                track = { sliderState ->
-                    Track(
-                        colors = colors, sliderState = sliderState,
-                        thumbTrackGapSize = 0.dp,
-                        trackInsideCornerSize = 0.dp
-                    )
-                },
-            )
-        }
+        ChatBoxSliderTips(
+            modifier = Modifier.padding(top = 16.dp),
+            value = sliderPosition.value,
+            title = stringResource(Res.string.text_font_size),
+            valueRange =  0.5f..2f,
+            onChangValue = {
+                sliderPosition.value = it
+//                changeModel(selectedOption.copy(temperature = it))
+            })
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,

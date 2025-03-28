@@ -5,6 +5,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -259,7 +261,14 @@ val customShapes = Shapes(
     large = RoundedCornerShape(16.dp), // 大型圆角设为 16dp
     extraLarge = RoundedCornerShape(20.dp),
 )
-
+@Composable
+fun SliderColors(): SliderColors{
+    return SliderDefaults.colors(
+        thumbColor = MaterialTheme.colorScheme.primary,
+        activeTrackColor = MaterialTheme.colorScheme.primary,
+        inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+    )
+}
 @Composable
 fun ChatBoxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
