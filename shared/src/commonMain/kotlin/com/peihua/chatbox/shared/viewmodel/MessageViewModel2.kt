@@ -1,6 +1,8 @@
 package com.peihua.chatbox.shared.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.GraphicsLayerScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peihua.chatbox.shared.data.db.AppDatabase
@@ -12,10 +14,13 @@ import com.peihua.chatbox.shared.data.db.MessageQueries
 import com.peihua.chatbox.shared.data.remote.repository.ChatAiRepository
 import com.peihua.chatbox.shared.data.remote.repository.impl.OpenAiRepositoryImpl
 import com.peihua.chatbox.shared.utils.ResultData
+import com.peihua.chatbox.shared.utils.WorkScope
 import com.peihua.chatbox.shared.utils.dLog
 import com.peihua.chatbox.shared.utils.request
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -37,10 +42,10 @@ class MessageViewModel2(
     val database: AppDatabase = DatabaseHelper.database,
     val messageQueries: MessageQueries = database.messageQueries,
     val repository: ChatAiRepository = OpenAiRepositoryImpl(),
-) : ViewModel() {
+) : ViewModel(),CoroutineScope by WorkScope() {
     val updateState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
     val selMsgState = mutableStateOf<ResultData<Message>>(ResultData.Initialize())
-
+    val _messages = mutableStateListOf<ChatBoxMessage>()
     val enInputState = mutableStateOf(true)
     val mUiState: StateFlow<UiState>
     val userAction: (UiAction) -> Unit
@@ -56,7 +61,6 @@ class MessageViewModel2(
             .catch { e ->
                 dLog { "Error in stream: ${e.message}" }  // 日志输出
             }
-
         val scrollAction = actionStateFlow
             .filterIsInstance<UiAction.Scroll>()
             .distinctUntilChanged()
@@ -99,6 +103,12 @@ class MessageViewModel2(
             viewModelScope.launch {
                 dLog { "User Action Triggered: $it" }  // 添加调试日志
                 actionStateFlow.emit(it)
+            }
+        }
+        launch {
+            pagingDataFlow.collect {
+                dLog { "Paging Data Collected: $it" }  // 添加调试日志
+                _messages.add(0,it)
             }
         }
     }
@@ -226,5 +236,11 @@ class MessageViewModel2(
             result
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        cancel()
+    }
 }
+
 

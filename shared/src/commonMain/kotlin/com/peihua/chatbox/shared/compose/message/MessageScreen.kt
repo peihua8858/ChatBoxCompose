@@ -134,32 +134,32 @@ fun MessageScreen(
         }
     }
 }
-
-@Composable
-fun MessageScreen2(
-    menuId: Long, modifier: Modifier = Modifier,
-    viewModel: MessageViewModel2 = viewModel(MessageViewModel2::class),
-) {
-    val resultData = viewModel.pagingDataFlow.collectAsLazyItems()
-    val refresh = {
-        viewModel.userAction(UiAction.QueryOrSendMsg(menuId))
-    }
-    val sendMessage = { query: String ->
-        viewModel.userAction(UiAction.QueryOrSendMsg(menuId, query))
-    }
-
-    if (resultData.isEmpty()) {
-        LaunchedEffect(resultData) { refresh() }
-    }
-    Box(
-        modifier = Modifier
-    ) {
-        Column {
-            MessageList(modifier = modifier.weight(1f), resultData)
-            InputText(modifier = Modifier, viewModel.enInputState.value, sendMessage)
-        }
-    }
-}
+//
+//@Composable
+//fun MessageScreen(
+//    menuId: Long, modifier: Modifier = Modifier,
+//    viewModel: MessageViewModel2 = viewModel(MessageViewModel2::class),
+//) {
+//    val resultData = viewModel._messages
+//    val refresh = {
+//        viewModel.userAction(UiAction.QueryOrSendMsg(menuId))
+//    }
+//    val sendMessage = { query: String ->
+//        viewModel.userAction(UiAction.QueryOrSendMsg(menuId, query))
+//    }
+//
+//    if (resultData.isEmpty()) {
+//        LaunchedEffect(resultData) { refresh() }
+//    }
+//    Box(
+//        modifier = Modifier
+//    ) {
+//        Column {
+//            MessageList(modifier = modifier.weight(1f), resultData)
+//            InputText(modifier = Modifier, viewModel.enInputState.value, sendMessage)
+//        }
+//    }
+//}
 
 @Composable
 fun InputText(modifier: Modifier, isEnabled: Boolean, sendMsg: (String) -> Unit) {
