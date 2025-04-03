@@ -12,6 +12,8 @@ interface Platform {
 
     @Composable
     fun dynamicColorScheme(isDarkTheme: Boolean): ColorScheme?
+
+    fun changeLanguage(language: String)
 }
 
 expect fun platform(): Platform

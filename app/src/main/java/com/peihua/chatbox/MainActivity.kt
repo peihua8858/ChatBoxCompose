@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     view.setBackgroundColor(color)
                     //状态栏高亮flag
                     WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars =
-                        model == ThemeMode.light
+                        model == ThemeMode.Light
                     // Adjust padding to avoid overlap
                     view.setPadding(0, 0, 0, 0)
                     insets

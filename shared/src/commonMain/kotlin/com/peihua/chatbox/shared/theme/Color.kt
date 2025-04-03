@@ -1,5 +1,6 @@
 package com.peihua.chatbox.shared.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF464647)
@@ -217,6 +218,19 @@ val surfaceContainerLowDarkHighContrast = Color(0xFF201F1F)
 val surfaceContainerDarkHighContrast = Color(0xFF313030)
 val surfaceContainerHighDarkHighContrast = Color(0xFF3C3B3B)
 val surfaceContainerHighestDarkHighContrast = Color(0xFF484646)
+
+private var messageBotCardBackgroundColor: Color = Color.Transparent
+private var messageHumanCardBackgroundColor: Color = Color.Transparent
+var ColorScheme.messageBotCardBackground: Color
+    get() = messageBotCardBackgroundColor
+    set(value) {
+        messageBotCardBackgroundColor = value
+    }
+var ColorScheme.messageHumanCardBackground: Color
+    get() = messageHumanCardBackgroundColor
+    set(value) {
+        messageHumanCardBackgroundColor = value
+    }
 
 
 fun argb(alpha: Float, red: Float, green: Float, blue: Float): Int {

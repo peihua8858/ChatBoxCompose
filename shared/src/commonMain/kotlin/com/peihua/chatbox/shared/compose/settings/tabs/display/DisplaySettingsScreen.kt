@@ -47,6 +47,8 @@ import chatboxcompose.shared.generated.resources.text_font_size
 import chatboxcompose.shared.generated.resources.theme
 import com.peihua.chatbox.shared.components.ChatBoxSliderTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
+import com.peihua.chatbox.shared.compose.appConfig
+import com.peihua.chatbox.shared.compose.changeAppConfig
 import com.peihua.chatbox.shared.localeProvider
 import com.peihua.chatbox.shared.theme.ThemeMode
 import org.jetbrains.compose.resources.stringArrayResource
@@ -62,7 +64,6 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
     val sliderPosition = remember { mutableFloatStateOf(1f) }
     val textScalerData =
         TextScalerData.create(sliderPosition.floatValue)
-    var selectedIndex = remember { mutableIntStateOf(0) }
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = modifier
@@ -142,11 +143,11 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 SegmentedButton(
                     colors = colors,
                     shape = SegmentedButtonDefaults.itemShape(
-                        index = ThemeMode.system.index,
+                        index = ThemeMode.System.index,
                         count = 3
                     ),
-                    onClick = { selectedIndex.intValue = ThemeMode.system.index },
-                    selected = ThemeMode.system.index == selectedIndex.intValue,
+                    onClick = {changeAppConfig(themeMode = ThemeMode.System) },
+                    selected = ThemeMode.System == appConfig.value.themeMode,
                     icon = {
 
                     },
@@ -160,11 +161,11 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 SegmentedButton(
                     colors = colors,
                     shape = SegmentedButtonDefaults.itemShape(
-                        index = ThemeMode.light.index,
+                        index = ThemeMode.Light.index,
                         count = 3
                     ),
-                    onClick = { selectedIndex.intValue = ThemeMode.light.index },
-                    selected = ThemeMode.light.index == selectedIndex.intValue,
+                    onClick = { changeAppConfig(themeMode = ThemeMode.Light) },
+                    selected = ThemeMode.Light == appConfig.value.themeMode,
                     icon = {
 
                     },
@@ -178,11 +179,11 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 SegmentedButton(
                     colors = colors,
                     shape = SegmentedButtonDefaults.itemShape(
-                        index = ThemeMode.dark.index,
+                        index = ThemeMode.Dark.index,
                         count = 3
                     ),
-                    onClick = { selectedIndex.intValue = ThemeMode.dark.index },
-                    selected = ThemeMode.dark.index == selectedIndex.intValue,
+                    onClick = { changeAppConfig(themeMode = ThemeMode.Dark) },
+                    selected = ThemeMode.Dark == appConfig.value.themeMode,
                     icon = {
 
                     },

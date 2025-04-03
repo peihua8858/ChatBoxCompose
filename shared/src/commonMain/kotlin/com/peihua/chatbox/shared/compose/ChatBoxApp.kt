@@ -9,6 +9,8 @@ import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavHostController
@@ -21,6 +23,8 @@ import androidx.navigation.compose.rememberNavController
 import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
+import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScalerData
+import com.peihua.chatbox.shared.platform
 import com.peihua.chatbox.shared.theme.ChatBoxTheme
 import com.peihua.chatbox.shared.theme.ThemeMode
 
@@ -95,6 +99,25 @@ fun navigate(
     appRouter.navigate(route, navOptions, navigatorExtras)
 }
 
+val appConfig =
+    mutableStateOf<AppConfig>(
+        AppConfig(
+            themeMode = ThemeMode.Light,
+            language = "zh",
+            fontTextScalerData = TextScalerData(1f, "Normal")
+        )
+    )
+
+fun changeAppConfig(
+    themeMode: ThemeMode = appConfig.value.themeMode,
+    language: String = appConfig.value.language,
+    fontTextScalerData: TextScalerData = appConfig.value.fontTextScalerData,
+) {
+    val config = AppConfig(themeMode, language, fontTextScalerData)
+    platform().changeLanguage(language)
+    appConfig.value = config
+}
+
 /**
  * 主应用组件
  *
@@ -109,7 +132,8 @@ fun ChatBoxApp(
     // 记住导航控制器实例
     val navController = rememberNavController()
     appRouter = navController
-    ChatBoxTheme { model, colorScheme ->
+//    println("appConfig: ${appConfig.value}")
+    ChatBoxTheme(appConfig.value) { model, colorScheme ->
         theme(model, colorScheme)
         ChatBoxNavHost(
             navController = navController, modifier

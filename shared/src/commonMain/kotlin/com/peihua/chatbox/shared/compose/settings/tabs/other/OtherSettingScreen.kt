@@ -70,11 +70,19 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
             content = {
                 Column(modifier = Modifier.padding(8.dp)) {
                     OutlinedTextField(
+                        modifier = Modifier.fillMaxWidth(),
                         value = "",
                         label = { Text(text = stringResource(Res.string.settingsProxyHost)) },
-                        onValueChange = {})
+                        onValueChange = {},
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Outlined.Clear,
+                                contentDescription = ""
+                            )
+                        },
+                    )
                     OutlinedTextField(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
                         label = { Text(text = stringResource(Res.string.settingsProxyPort)) },
                         trailingIcon = {
@@ -85,7 +93,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         },
                         onValueChange = {})
                     OutlinedTextField(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
                         label = { Text(text = stringResource(Res.string.settingsProxyUsername)) },
                         trailingIcon = {
@@ -96,7 +104,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         },
                         onValueChange = {})
                     OutlinedTextField(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
                         label = { Text(text = stringResource(Res.string.settingsProxyPassword)) },
                         trailingIcon = {

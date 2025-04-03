@@ -16,6 +16,10 @@ class IOSPlatform : Platform {
     override fun dynamicColorScheme(isDarkTheme: Boolean): ColorScheme? {
         return null
     }
+
+    override fun changeLanguage(language: String) {
+        // 设置语言
+    }
 }
 
 private val mPlatform: Platform = IOSPlatform()

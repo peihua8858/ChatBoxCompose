@@ -60,6 +60,8 @@ import com.peihua.chatbox.shared.components.stateView.ErrorView
 import com.peihua.chatbox.shared.components.stateView.LoadingView
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.UserType
+import com.peihua.chatbox.shared.theme.messageBotCardBackground
+import com.peihua.chatbox.shared.theme.messageHumanCardBackground
 import com.peihua.chatbox.shared.utils.ResultData
 import com.peihua.chatbox.shared.viewmodel.MessageViewModel
 import dev.snipme.highlights.Highlights
@@ -217,7 +219,7 @@ fun MessageList(modifier: Modifier = Modifier, resultData: List<ChatBoxMessage>)
         reverseLayout = true,
         modifier = modifier
             .fillMaxWidth()
-            .background(Color(241, 241, 241))
+            .background(MaterialTheme.colorScheme.surfaceDim)
             .padding(horizontal = 16.dp)
     ) {
         items(resultData) { item, index ->
@@ -254,7 +256,7 @@ fun MessageCard(message: ChatBoxMessage, isHuman: Boolean = false, isLast: Boole
                     end = if (isHuman) 0.dp else 32.dp,
                 )
                 .background(
-                    if (isHuman) Color.Blue else Color.White,
+                    if (isHuman) MaterialTheme.colorScheme.messageHumanCardBackground else MaterialTheme.colorScheme.messageBotCardBackground,
                     shape = RoundedCornerShape(12.dp)
                 ),
         ) {
@@ -276,7 +278,7 @@ fun MessageCard(message: ChatBoxMessage, isHuman: Boolean = false, isLast: Boole
 fun HumanMessageCard(message: ChatBoxMessage) {
     Text(
         text = message.message.value,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.onPrimary,
         modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
         style = MaterialTheme.typography.bodyLarge,
         textAlign = TextAlign.Justify,
@@ -293,7 +295,7 @@ fun BotMessageCard(message: ChatBoxMessage) {
     Box(modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp)) {
         Markdown(
             content = message.message.value.trimIndent(),
-            colors = markdownColor(text = Color.Black),
+            colors = markdownColor(text = MaterialTheme.colorScheme.primary),
             typography = markdownTypography(),
             imageTransformer = Coil3ImageTransformerImpl,
             components = markdownComponents(

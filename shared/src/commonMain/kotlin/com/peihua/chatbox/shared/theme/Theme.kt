@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.peihua.chatbox.shared.compose.AppConfig
 import com.peihua.chatbox.shared.platform
 
 private val lightScheme = lightColorScheme(
@@ -261,20 +262,22 @@ val customShapes = Shapes(
     large = RoundedCornerShape(16.dp), // 大型圆角设为 16dp
     extraLarge = RoundedCornerShape(20.dp),
 )
+
 @Composable
-fun SliderColors(): SliderColors{
+fun SliderColors(): SliderColors {
     return SliderDefaults.colors(
         thumbColor = MaterialTheme.colorScheme.primary,
         activeTrackColor = MaterialTheme.colorScheme.primary,
         inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
     )
 }
+
 @Composable
 fun ChatBoxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
-    content: @Composable() (ThemeMode,colorScheme:ColorScheme) -> Unit,
+    content: @Composable() (ThemeMode, colorScheme: ColorScheme) -> Unit,
 ) {
     val dynamicColorScheme = if (dynamicColor) platform().dynamicColorScheme(darkTheme) else null
     val colorScheme = when {
@@ -283,15 +286,39 @@ fun ChatBoxTheme(
         else -> lightScheme
     }
 
+    colorScheme.messageBotCardBackground = if(darkTheme) colorScheme.surfaceVariant else colorScheme.background
+    colorScheme.messageHumanCardBackground = if(darkTheme) colorScheme.background else colorScheme.onSurfaceVariant
     MaterialTheme(
         shapes = customShapes,
         colorScheme = colorScheme,
 //    typography = AppTypography,
         content = {
-            content(if (darkTheme) ThemeMode.dark else ThemeMode.light,colorScheme)
+            content(if (darkTheme) ThemeMode.Dark else ThemeMode.Light, colorScheme)
         }
     )
 
 }
 
+@Composable
+fun ChatBoxTheme(
+    config: AppConfig,
+    // Dynamic color is available on Android 12+
+    content: @Composable() (ThemeMode, colorScheme: ColorScheme) -> Unit,
+) {
+    val themeMode = config.themeMode
+
+    when (themeMode) {
+        ThemeMode.Dark -> {
+            ChatBoxTheme(darkTheme = true, content = content)
+        }
+
+        ThemeMode.Light -> {
+            ChatBoxTheme(darkTheme = false, content = content)
+        }
+
+        ThemeMode.System -> {
+            ChatBoxTheme(darkTheme = isSystemInDarkTheme(), content = content)
+        }
+    }
+}
 
