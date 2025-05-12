@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import com.peihua.chatbox.shared.currentTimeMillis
 import com.peihua.chatbox.shared.data.db.Menu
 import com.peihua.chatbox.shared.data.db.Message
-
 enum class UserType(val value: Long) {
     USER(1),
     SYSTEM(0)
@@ -56,3 +55,4 @@ data class ChatBoxMessage(
     val create_time: Long,
     val update_time: Long,
 )
+

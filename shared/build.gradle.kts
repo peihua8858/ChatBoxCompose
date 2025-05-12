@@ -95,6 +95,10 @@ kotlin {
                 implementation(libs.coil3.coil.compose)
                 api(libs.androidx.datastore.preferences.core)
                 api(libs.androidx.datastore.core.okio)
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.sqlite.bundled)
+                implementation(libs.kotlinx.atomicfu)
+                implementation(libs.okio)
                 implementation(libs.skie.annotations)
                 implementation("dev.tclement.fonticons:core:2.0.0")
                 implementation(kotlin("stdlib-common"))
@@ -109,6 +113,7 @@ kotlin {
                 implementation("com.mikepenz:multiplatform-markdown-renderer-coil3:${markdown}")
 
                 // Add KMP dependencies here
+
             }
         }
         jvmMain {
@@ -160,11 +165,30 @@ kotlin {
     }
 
 }
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
 sqldelight {
     databases {
         create("AppDatabase") {
             packageName.set("com.peihua.chatbox.shared.data.db")
 
         }
+    }
+}
+
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+skie {
+    features {
+        // https://skie.touchlab.co/features/flows-in-swiftui
+        enableSwiftUIObservingPreview = true
     }
 }

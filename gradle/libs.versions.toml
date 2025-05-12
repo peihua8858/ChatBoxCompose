@@ -57,6 +57,9 @@ androidx-paging = "3.3.6"
 pagingComposeAndroid = "3.3.6"
 ksp = "2.1.10-1.0.29"
 skie = "0.10.1"
+atomicfu = "0.27.0"
+sqlite = "2.5.0-rc03"
+okio = "3.10.2"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "systemuicontroller" }
@@ -74,7 +77,9 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "androidx-room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 
-
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 coil3-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilComposeVersion" }
 
 

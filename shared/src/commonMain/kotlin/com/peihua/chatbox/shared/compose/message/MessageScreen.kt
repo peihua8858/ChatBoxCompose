@@ -63,7 +63,7 @@ import com.peihua.chatbox.shared.data.db.UserType
 import com.peihua.chatbox.shared.theme.messageBotCardBackground
 import com.peihua.chatbox.shared.theme.messageHumanCardBackground
 import com.peihua.chatbox.shared.utils.ResultData
-import com.peihua.chatbox.shared.viewmodel.MessageViewModel
+import com.peihua.chatbox.shared.viewmodel.RoomMessageViewModel
 import dev.snipme.highlights.Highlights
 import dev.snipme.highlights.model.SyntaxThemes
 import kotlinx.coroutines.flow.Flow
@@ -98,7 +98,7 @@ fun <T> Flow<T>.collectAsLazyItems(
 @Composable
 fun MessageScreen(
     menuId: Long, modifier: Modifier = Modifier,
-    viewModel: MessageViewModel = viewModel(MessageViewModel::class),
+    viewModel: RoomMessageViewModel = viewModel(RoomMessageViewModel::class),
 ) {
     val resultData = viewModel.messages.value
     //请求数据
