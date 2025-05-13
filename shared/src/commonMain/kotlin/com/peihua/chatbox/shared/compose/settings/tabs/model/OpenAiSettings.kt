@@ -41,9 +41,10 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun OpenAiSettingsContent(
     modifier: Modifier = Modifier,
-    model: Model,
-    modelChange: (Model) -> Unit,
+    provider: ModelProvider,
+    modelChange: (ModelProvider) -> Unit,
 ) {
+    val model = provider.model
     val apiKey = remember { mutableStateOf(model.apiKey) }
     val hostState = remember { mutableStateOf(model.host) }
     Column(
@@ -54,7 +55,8 @@ fun OpenAiSettingsContent(
             value = apiKey.value,
             onValueChange = {
                 apiKey.value = it
-                modelChange(model.copy(apiKey = it))
+                provider.model = model.copy(apiKey = it)
+                modelChange(provider)
             },
             label = { Text(stringResource(Res.string.settingsModelProviderOpenAI)) },
             textStyle = MaterialTheme.typography.labelMedium,
@@ -65,7 +67,8 @@ fun OpenAiSettingsContent(
             value = hostState.value,
             onValueChange = {
                 hostState.value = it
-                modelChange(model.copy(host = it))
+                provider.model = model.copy(host = it)
+                modelChange(provider)
             },
             label = { Text(stringResource(Res.string.settingsModelProviderOpenAIHost)) },
             textStyle = MaterialTheme.typography.labelMedium,
@@ -95,10 +98,11 @@ fun OpenAiSettingsContent(
             },
             content = {
                 ModelAndToken(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(16.dp),
                     selectedOption = model
                 ) {
-                    modelChange(it)
+                    provider.model = it
+                    modelChange(provider)
                 }
             })
     }
@@ -112,7 +116,7 @@ fun ModelAndToken(
 ) {
     val modelState = remember { mutableStateOf(selectedOption.model) }
     val temperatureState = remember { mutableStateOf(selectedOption.temperature) }
-    Column {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(Res.string.settingsModelAndTokenTips),
             style = MaterialTheme.typography.bodySmall,
@@ -131,7 +135,7 @@ fun ModelAndToken(
         )
         Spacer(modifier = Modifier.height(8.dp))
         ChatBoxSliderTips(
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp),
+            modifier = Modifier,
             value = temperatureState.value,
             titleOrientation = Orientation.Vertical,
             title = stringResource(Res.string.settingsModelTemperature),
@@ -142,7 +146,7 @@ fun ModelAndToken(
             })
         Spacer(modifier = Modifier.height(8.dp))
         ChatBoxSliderTips(
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp),
+            modifier = Modifier,
             value = temperatureState.value,
             titleOrientation = Orientation.Vertical,
             title = stringResource(Res.string.settingsModelTemperature),

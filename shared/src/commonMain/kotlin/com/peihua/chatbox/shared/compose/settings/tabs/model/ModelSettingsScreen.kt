@@ -81,6 +81,6 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        modelProvider.contentView(Modifier, selectedOption.value.model, { selectedOption.value.model = it })
+        modelProvider.contentView(Modifier, modelProvider, { selectedOption.value = it })
     }
 }

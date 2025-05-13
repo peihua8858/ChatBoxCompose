@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 
 enum class ModelProvider(
     var model: Model,
-    val contentView: @Composable (modifier: Modifier, model: Model, modelChange: (Model) -> Unit) -> Unit,
+    val contentView: @Composable (modifier: Modifier, provider: ModelProvider, modelChange: (ModelProvider) -> Unit) -> Unit,
 ) {
     /**
      * OpenAI
@@ -15,22 +15,22 @@ enum class ModelProvider(
         Model("https://api.openai.com",
         "gpt-3.5-turbo",
         "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
-        contentView = { modifier, model, modelChange ->
-            OpenAiSettingsContent(modifier, model, modelChange)
+        contentView = { modifier, provider, modelChange ->
+            OpenAiSettingsContent(modifier, provider, modelChange)
         }),
 
     /**
      * DeepSeek
      */
-    DeepSeek( Model("https://api.deepseek.com", "", ""), { modifier, model, modelChange ->
-        DeepSeekSettingsContent(modifier, model, modelChange)
+    DeepSeek( Model("https://api.deepseek.com", "", ""), { modifier, provider, modelChange ->
+        DeepSeekSettingsContent(modifier, provider, modelChange)
     }),
 
     /**
      * Gemini
      */
-    Gemini( Model("https://api.gemini.com", "", ""), { modifier, model, modelChange ->
-        GeminiAiSettingsContent(modifier, model, modelChange)
+    Gemini( Model("https://api.gemini.com", "", ""), { modifier, provider, modelChange ->
+        GeminiAiSettingsContent(modifier, provider, modelChange)
     });
 
     val displayName: String

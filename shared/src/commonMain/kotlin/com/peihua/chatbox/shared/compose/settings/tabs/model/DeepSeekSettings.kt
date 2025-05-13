@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DeepSeekSettingsContent(
     modifier: Modifier = Modifier,
-    model: Model,
-    modelChange: (Model) -> Unit,
+    model: ModelProvider,
+    modelChange: (ModelProvider) -> Unit,
 ) {
 }
