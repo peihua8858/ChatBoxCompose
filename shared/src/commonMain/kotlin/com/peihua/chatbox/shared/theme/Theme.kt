@@ -287,7 +287,7 @@ fun ChatBoxTheme(
     }
 
     colorScheme.messageBotCardBackground = if(darkTheme) colorScheme.surfaceVariant else colorScheme.background
-    colorScheme.messageHumanCardBackground = if(darkTheme) colorScheme.background else colorScheme.onSurfaceVariant
+    colorScheme.messageHumanCardBackground = if(darkTheme) colorScheme.onSurface else colorScheme.onSurfaceVariant
     MaterialTheme(
         shapes = customShapes,
         colorScheme = colorScheme,
