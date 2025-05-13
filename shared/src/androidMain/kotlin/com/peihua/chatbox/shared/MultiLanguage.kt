@@ -1,6 +1,5 @@
 package com.peihua.chatbox.shared
 
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -47,7 +46,7 @@ class MultiLanguage private constructor() {
         }
 
         fun updateResources(context: Context, locale: Locale): Context? {
-            val configuration = context.getResources().getConfiguration()
+            val configuration = context.resources.configuration
             configuration.setLocale(locale)
             configuration.setLocales(LocaleList(locale))
             configuration.setLayoutDirection(locale)
@@ -55,11 +54,11 @@ class MultiLanguage private constructor() {
         }
 
         fun updateResourcesLegacy(context: Context, locale: Locale?): Context {
-            val resources = context.getResources()
-            val configuration = resources.getConfiguration()
+            val resources = context.resources
+            val configuration = resources.configuration
             configuration.setLocale(locale)
             configuration.setLayoutDirection(locale)
-            resources.updateConfiguration(configuration, resources.getDisplayMetrics())
+            resources.updateConfiguration(configuration, resources.displayMetrics)
             return context
         }
         /**
@@ -68,25 +67,23 @@ class MultiLanguage private constructor() {
         fun changeLanguage(context: Context, language: String) {
             val resources = context.resources
             val config = resources.configuration
-            val locale: Locale = Locale(language)
+            val locale = Locale(language)
             config.setLocale(locale)
             val localeList = LocaleList(locale)
             config.setLocales(localeList)
-            resources.updateConfiguration(config, resources.getDisplayMetrics())
+            resources.updateConfiguration(config, resources.displayMetrics)
         }
         /**
          * 设置语言类型
          */
         fun changeLanguage(context: Context) {
-            val resources = context.getApplicationContext().getResources()
-            val config = resources.getConfiguration()
+            val resources = context.applicationContext.resources
+            val config = resources.configuration
             val locale: Locale = getLanguageLocale(context)
             config.setLocale(locale)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val localeList = LocaleList(locale)
-                config.setLocales(localeList)
-            }
-            resources.updateConfiguration(config, resources.getDisplayMetrics())
+            val localeList = LocaleList(locale)
+            config.setLocales(localeList)
+            resources.updateConfiguration(config, resources.displayMetrics)
         }
 
         /**

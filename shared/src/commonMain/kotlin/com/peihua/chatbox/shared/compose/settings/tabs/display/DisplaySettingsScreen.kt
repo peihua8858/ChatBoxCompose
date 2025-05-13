@@ -26,7 +26,6 @@ import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -47,8 +46,8 @@ import chatboxcompose.shared.generated.resources.text_font_size
 import chatboxcompose.shared.generated.resources.theme
 import com.peihua.chatbox.shared.components.ChatBoxSliderTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
-import com.peihua.chatbox.shared.compose.appConfig
-import com.peihua.chatbox.shared.compose.changeAppConfig
+import com.peihua.chatbox.shared.compose.changeSettings
+import com.peihua.chatbox.shared.compose.settings
 import com.peihua.chatbox.shared.localeProvider
 import com.peihua.chatbox.shared.theme.ThemeMode
 import org.jetbrains.compose.resources.stringArrayResource
@@ -61,9 +60,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
     val localeList = languageCodes.map { Locale(it) }
     val isExpanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(Locale.current) }
-    val sliderPosition = remember { mutableFloatStateOf(1f) }
-    val textScalerData =
-        TextScalerData.create(sliderPosition.floatValue)
+    val textScalerData =settings.value.fontTextScalerData
+    val sliderPosition = remember { mutableFloatStateOf(textScalerData.textScaler) }
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = modifier
@@ -105,6 +103,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         },
                         onClick = {
                             selectedOption.value = locale
+                            changeSettings(language = locale.toLanguageTag())
                             isExpanded.value = !isExpanded.value
                         },
                     )
@@ -118,7 +117,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
             valueRange =  0.5f..2f,
             onChangValue = {
                 sliderPosition.value = it
-//                changeModel(selectedOption.copy(temperature = it))
+                changeSettings(fontTextScalerData = textScalerData.copy(textScaler = it))
             })
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -146,8 +145,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.System.index,
                         count = 3
                     ),
-                    onClick = {changeAppConfig(themeMode = ThemeMode.System) },
-                    selected = ThemeMode.System == appConfig.value.themeMode,
+                    onClick = {changeSettings(themeMode = ThemeMode.System) },
+                    selected = ThemeMode.System == settings.value.themeMode,
                     icon = {
 
                     },
@@ -164,8 +163,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.Light.index,
                         count = 3
                     ),
-                    onClick = { changeAppConfig(themeMode = ThemeMode.Light) },
-                    selected = ThemeMode.Light == appConfig.value.themeMode,
+                    onClick = { changeSettings(themeMode = ThemeMode.Light) },
+                    selected = ThemeMode.Light == settings.value.themeMode,
                     icon = {
 
                     },
@@ -182,8 +181,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.Dark.index,
                         count = 3
                     ),
-                    onClick = { changeAppConfig(themeMode = ThemeMode.Dark) },
-                    selected = ThemeMode.Dark == appConfig.value.themeMode,
+                    onClick = { changeSettings(themeMode = ThemeMode.Dark) },
+                    selected = ThemeMode.Dark == settings.value.themeMode,
                     icon = {
 
                     },
@@ -198,7 +197,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         }
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = true,
+            checked = settings.value.showWordCount,
             onCheckedChange = {
             },
             title = {
@@ -207,8 +206,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = true,
+            checked = settings.value.showTokenCount,
             onCheckedChange = {
+                changeSettings(showTokenCount = it)
             },
             title = {
                 Text(text = stringResource(Res.string.settingsShowTokenCount))
@@ -216,8 +216,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = true,
+            checked = settings.value.showTokenUsage,
             onCheckedChange = {
+                changeSettings(showTokenUsage = it)
             },
             title = {
                 Text(text = stringResource(Res.string.settingsShowTokenUsage))
@@ -225,8 +226,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = true,
+            checked = settings.value.showModelName,
             onCheckedChange = {
+                changeSettings(showModelName = it)
             },
             title = {
                 Text(text = stringResource(Res.string.settingsShowModelName))

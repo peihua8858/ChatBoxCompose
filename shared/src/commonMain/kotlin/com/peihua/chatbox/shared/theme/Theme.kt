@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.peihua.chatbox.shared.compose.AppConfig
+import com.peihua.chatbox.shared.compose.Settings
 import com.peihua.chatbox.shared.platform
 
 private val lightScheme = lightColorScheme(
@@ -301,7 +301,7 @@ fun ChatBoxTheme(
 
 @Composable
 fun ChatBoxTheme(
-    config: AppConfig,
+    config: Settings,
     // Dynamic color is available on Android 12+
     content: @Composable() (ThemeMode, colorScheme: ColorScheme) -> Unit,
 ) {

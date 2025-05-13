@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.peihua.chatbox.shared.LocalContext
+import com.peihua.chatbox.shared.data.database.AppDataStore
 import com.peihua.chatbox.shared.data.database.AppDatabase
 import com.peihua.chatbox.shared.data.database.dbFileName
 import com.peihua.chatbox.shared.http.HttpClient
@@ -23,8 +24,13 @@ actual class Factory(private val app: Context) {
     actual fun createHttpClient(): io.ktor.client.HttpClient {
         return HttpClient{}
     }
+    actual fun createDataStore(): AppDataStore {
+        return AppDataStore(storePath = app.filesDir.absolutePath)
+    }
 }
-
+private val mFactory: Factory by lazy {
+    Factory(app = LocalContext.context.applicationContext)
+}
 actual fun FactoryImpl() : Factory {
-    return Factory(app = LocalContext.context.applicationContext)
+    return mFactory
 }

@@ -65,6 +65,10 @@ fun <T> T.dLog(lazyMessage: () -> String): T {
     printLog(Logger.DEBUG, STACK_TRACE_INDEX, "", message)
     return this
 }
+fun dLog(lazyMessage: () -> String){
+    val message = lazyMessage()
+    printLog(Logger.DEBUG, STACK_TRACE_INDEX, "", message)
+}
 
 fun <T> T.iLog(lazyMessage: () -> String): T {
     val message = lazyMessage()

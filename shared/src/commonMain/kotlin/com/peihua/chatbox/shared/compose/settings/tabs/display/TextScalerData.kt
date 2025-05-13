@@ -6,8 +6,9 @@ import chatboxcompose.shared.generated.resources.text_font_extraLarge
 import chatboxcompose.shared.generated.resources.text_font_large
 import chatboxcompose.shared.generated.resources.text_font_nomal
 import chatboxcompose.shared.generated.resources.text_font_small
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
-
+@Serializable
 data class TextScalerData(val textScaler: Float, val textScalerName: String) {
     companion object {
         @Composable

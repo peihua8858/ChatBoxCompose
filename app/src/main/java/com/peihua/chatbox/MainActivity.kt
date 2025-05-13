@@ -15,9 +15,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        enableEdgeToEdge()
+        LocalContext.context = this
         setContent {
             ChatBoxApp { model, colorScheme ->
-                LocalContext.context = this
                 window.decorView.setOnApplyWindowInsetsListener { view, insets ->
                     val color = argb(
                         colorScheme.surface.alpha,

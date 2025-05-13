@@ -2,6 +2,7 @@ package com.peihua.chatbox.shared.di
 
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.peihua.chatbox.shared.data.database.AppDataStore
 import com.peihua.chatbox.shared.data.database.AppDatabase
 import com.peihua.chatbox.shared.data.database.dbFileName
 import com.peihua.chatbox.shared.http.HttpClient
@@ -16,7 +17,7 @@ import platform.Foundation.NSUserDomainMask
 
 actual class Factory() {
     actual fun createRoomDatabase(): AppDatabase {
-        val dbFile = "${fileDirectory()}/$dbFileName"
+        val dbFile = "${fileDirectory()}/database/$dbFileName"
         return Room.databaseBuilder<AppDatabase>(
             name = dbFile,
         )
@@ -24,14 +25,15 @@ actual class Factory() {
             .setQueryCoroutineContext(Dispatchers.IO)
             .build()
     }
+
     actual fun createHttpClient(): io.ktor.client.HttpClient {
-        return HttpClient{}
+        return HttpClient {}
     }
-//    actual fun createCartDataStore(): CartDataStore {
-//        return CartDataStore {
-//            "${fileDirectory()}/cart.json"
-//        }
-//    }
+
+    actual fun createDataStore(): AppDataStore {
+        val storeFile = "${fileDirectory()}/store"
+        return AppDataStore(storePath = storeFile)
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     private fun fileDirectory(): String {
@@ -44,10 +46,10 @@ actual class Factory() {
         )
         return requireNotNull(documentDirectory).path!!
     }
-
-//    actual fun createApi(): FruittieApi = commonCreateApi()
 }
-
-actual fun FactoryImpl() : Factory {
-    return Factory()
+private val mFactory: Factory by lazy {
+    Factory()
+}
+actual fun FactoryImpl(): Factory {
+    return mFactory
 }

@@ -19,12 +19,13 @@ import chatboxcompose.shared.generated.resources.settingsNewChatTips
 import chatboxcompose.shared.generated.resources.settingsResetDefault
 import chatboxcompose.shared.generated.resources.settingsSpellCheck
 import com.peihua.chatbox.shared.components.SwitchListTile
+import com.peihua.chatbox.shared.compose.changeSettings
+import com.peihua.chatbox.shared.compose.settings
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ChatSettingsScreen(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
-    val isSpellCheck = remember { mutableStateOf(true) }
     val chatTips =
         remember { mutableStateOf("You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.") }
     Column(
@@ -48,8 +49,9 @@ fun ChatSettingsScreen(modifier: Modifier = Modifier) {
                 })
         SwitchListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = isSpellCheck.value, onCheckedChange = {
-                isSpellCheck.value = it
+            checked = settings.value.spellCheck,
+            onCheckedChange = {
+                changeSettings(spellCheck = it)
             }) {
             Text(
                 modifier = Modifier.padding(start = 8.dp),

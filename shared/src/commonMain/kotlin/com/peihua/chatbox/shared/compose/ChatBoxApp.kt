@@ -9,8 +9,8 @@ import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavHostController
@@ -24,9 +24,10 @@ import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
 import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScalerData
-import com.peihua.chatbox.shared.platform
+import com.peihua.chatbox.shared.di.FactoryImpl
 import com.peihua.chatbox.shared.theme.ChatBoxTheme
 import com.peihua.chatbox.shared.theme.ThemeMode
+import com.peihua.chatbox.shared.utils.dLog
 
 private lateinit var appRouter: NavHostController
 
@@ -99,24 +100,54 @@ fun navigate(
     appRouter.navigate(route, navOptions, navigatorExtras)
 }
 
-val appConfig =
-    mutableStateOf<AppConfig>(
-        AppConfig(
-            themeMode = ThemeMode.Light,
-            language = "zh",
-            fontTextScalerData = TextScalerData(1f, "Normal")
+val settings = mutableStateOf<Settings>(
+    Settings(
+        themeMode = ThemeMode.Light,
+        language = "zh",
+        showAvatar = true,
+        showWordCount = true,
+        showTokenCount = true,
+        showModelName = true,
+        showTokenUsage = true,
+        spellCheck = true,
+        fontTextScalerData = TextScalerData(1.0f, "Normal"),
+    )
+)
+
+fun changeSettings(
+    themeMode: ThemeMode = settings.value.themeMode,
+    language: String = settings.value.language,
+    fontTextScalerData: TextScalerData = settings.value.fontTextScalerData,
+    showAvatar: Boolean = settings.value.showAvatar,
+    showWordCount: Boolean = settings.value.showWordCount,
+    showTokenCount: Boolean = settings.value.showTokenCount,
+    showModelName: Boolean = settings.value.showModelName,
+    showTokenUsage: Boolean = settings.value.showTokenUsage,
+    spellCheck: Boolean = settings.value.spellCheck,
+) {
+    changeSettings(
+        settings.value.copy(
+            themeMode = themeMode,
+            language = language,
+            fontTextScalerData = fontTextScalerData,
+            showAvatar = showAvatar,
+            showWordCount = showWordCount,
+            showTokenCount = showTokenCount,
+            showModelName = showModelName,
+            showTokenUsage = showTokenUsage,
+            spellCheck = spellCheck,
         )
     )
-
-fun changeAppConfig(
-    themeMode: ThemeMode = appConfig.value.themeMode,
-    language: String = appConfig.value.language,
-    fontTextScalerData: TextScalerData = appConfig.value.fontTextScalerData,
-) {
-    val config = AppConfig(themeMode, language, fontTextScalerData)
-    platform().changeLanguage(language)
-    appConfig.value = config
 }
+
+fun changeSettings(st: Settings) {
+    settings.value = st
+    appDataStore.settings.updateSettings(st)
+}
+
+private val mFactory by lazy { FactoryImpl() }
+
+private val appDataStore by lazy { mFactory.createDataStore() }
 
 /**
  * 主应用组件
@@ -129,11 +160,17 @@ fun ChatBoxApp(
     modifier: Modifier = Modifier,
     theme: (themeMode: ThemeMode, colorScheme: ColorScheme) -> Unit = { model, colorScheme -> },
 ) {
+    LaunchedEffect(settings) {
+        appDataStore.settings.data.collect {
+            settings.value = it
+        }
+    }
+    dLog { "settings: ${settings.value}" }
     // 记住导航控制器实例
     val navController = rememberNavController()
     appRouter = navController
 //    println("appConfig: ${appConfig.value}")
-    ChatBoxTheme(appConfig.value) { model, colorScheme ->
+    ChatBoxTheme(settings.value) { model, colorScheme ->
         theme(model, colorScheme)
         ChatBoxNavHost(
             navController = navController, modifier

@@ -1,0 +1,128 @@
+<resources>
+    <string name="app_name">ChatBoxCompose</string>
+    <string name="about">关于</string>
+    <string name="settings">设置</string>
+    <string name="model">模型</string>
+    <string name="chat">聊天</string>
+    <string name="advanced">高级</string>
+    <string name="other">其他</string>
+    <string name="display">显示</string>
+    <string name="language">语言</string>
+    <string name="theme">主题</string>
+    <string name="dark_mode">暗黑模式</string>
+    <string name="light_mode">明亮模式</string>
+    <string name="system_mode">系统模式</string>
+    <string name="system_default">系统默认</string>
+    <string name="text_font_size">字体大小</string>
+    <string name="text_font_small">小</string>
+    <string name="text_font_nomal">标准</string>
+    <string name="text_font_large">大</string>
+    <string name="text_font_extraLarge">超大</string>
+    <string name="settingsShowWordCount">显示消息的字数统计</string>
+    <string name="settingsShowTokenCount">显示消息的Token数量</string>
+    <string name="settingsShowTokenUsage">显示消息的Token消耗</string>
+    <string name="settingsShowModelName">显示模型名称</string>
+    <string name="settingsSpellCheck">拼写检查</string>
+    <string name="settingsResetDefault">重置默认值</string>
+    <string name="settingsNewChatTips">新对话默认提示</string>
+    <!--  网络代理  -->
+    <string name="settingsProxy">网络代理</string>
+    <string name="settingsProxyType">代理类型</string>
+    <string name="settingsProxyHost">代理主机</string>
+    <string name="settingsProxyPort">代理端口</string>
+    <string name="settingsProxyUsername">代理用户名</string>
+    <string name="settingsProxyPassword">代理密码</string>
+    <string name="settingsProxyTest">测试</string>
+    <!--  键盘快捷键  -->
+    <string name="settingsKeyboardShortcuts">键盘快捷键</string>
+    <string name="settingsKeyboardShortcutsTips">快捷键</string>
+    <!--  数据备份与恢复  -->
+    <string name="settingsBackupAndRestore">数据备份与恢复</string>
+    <!--    导出备份数据-->
+    <string name="settingsBackupAndRestoreExport">导出备份数据</string>
+    <!--    导入备份数据-->
+    <string name="settingsBackupAndRestoreImport">导入备份数据</string>
+    <!--    导入后将直接生效，原有数据将被完全覆盖，请谨慎操作-->
+    <string name="settingsRestoreTips">导入后将直接生效，原有数据将被完全覆盖，请谨慎操作</string>
+    <!--    聊天记录-->
+    <string name="settingsBackupChat">聊天记录</string>
+    <!--    数据备份-->
+    <string name="settingsBackupAndRestoreBackup">数据备份</string>
+    <!--    数据恢复-->
+    <string name="settingsBackupAndRestoreRestore">数据恢复</string>
+    <!--  模型提供方  -->
+    <string name="settingsModelProvider">模型提供方</string>
+<!--    OpenAI API Key-->
+    <string name="settingsModelProviderOpenAI">OpenAI API Key</string>
+<!--    -API Host-->
+    <string name="settingsModelProviderOpenAIHost">API Host</string>
+    <string name="settingsModelProviderModelAndToken">模型&amp;Token</string>
+    <string name="settingsModelAndTokenTips">These settings are aimed at professional developers. If you do not understand the meaning of these settings, please do not modify them, as it may result in request errors. Before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors). Please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.Please make sure you know what you are doing.Click here toto default values.</string>
+    <string name="settingsModelTemperature">严谨与想象（Temperature）</string>
+    <!--    <string name="settingsModelProviderTips">Untitled-->
+<!--You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.-->
+
+<!--word count: 19-->
+
+
+<!--Chatbox-->
+<!--Chat-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--Settings-->
+<!--openai-->
+<!--AI Model Provider-->
+<!--OpenAI API Key-->
+<!--sk-xxxxxxxxxxxxxxxxxxxxxxxx-->
+<!--OpenAI API Key-->
+<!--https://api.openai.com-->
+<!--API Host-->
+
+<!--These settings are aimed at professional developers. If you do not understand the meaning of these settings, please do not modify them, as it may result in request errors. Before making any modifications, please verify that your account has access to the selected models (some models require additional joining of the waiting list, regardless of your account type, otherwise, it will result in 404 errors). Please make sure that the number of tokens does not exceed the limit for the selected model, otherwise, an error message will occur once the context exceeds the limit.Please make sure you know what you are doing.Click here toto default values.-->
+<!--gpt-3.5-turbo-->
+<!--Model-->
+<!--Temperature-->
+
+<!--Meticulous-->
+<!--Creative-->
+
+<!--0.7-->
+<!--0.7-->
+
+<!--Top P-->
+
+
+<!--1-->
+<!--1-->
+
+<!--Max Message Count in Context-->
+
+
+<!--10-->
+<!--10-->
+
+<!--Max Tokens in Context-->
+
+
+<!--4000-->
+<!--4000-->
+
+<!--Max Tokens to Generate-->
+
+
+<!--0-->
+<!--Auto</string>-->
+
+
+</resources>
