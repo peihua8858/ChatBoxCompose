@@ -23,15 +23,6 @@ actual class Factory(private val app: Context) {
     actual fun createHttpClient(): io.ktor.client.HttpClient {
         return HttpClient{}
     }
-//
-//    actual fun createCartDataStore(): CartDataStore {
-//        return CartDataStore {
-//            app.filesDir.resolve(
-//                "cart.json",
-//            ).absolutePath
-//        }
-//    }
-
 }
 
 actual fun FactoryImpl() : Factory {

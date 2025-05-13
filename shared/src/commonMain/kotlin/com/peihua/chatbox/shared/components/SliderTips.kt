@@ -106,7 +106,7 @@ private fun ChatBoxSlider(
             Thumb(
                 value = sliderPosition.floatValue,
                 colors = colors,
-                thumbSize = DpSize(20.dp, 20.dp)
+                thumbSize = DpSize(24.dp, 24.dp)
             )
         },
         track = { sliderState ->
@@ -120,16 +120,16 @@ private fun ChatBoxSlider(
 }
 
 @Composable
-fun Thumb(
+private fun Thumb(
     modifier: Modifier = Modifier,
     value: Float,
     colors: SliderColors = SliderDefaults.colors(),
     thumbSize: DpSize,
 ) {
     Column(
-        modifier = modifier.height(118.dp),
+        modifier = modifier.padding(bottom = thumbSize.height * 2),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Top,
     ) {
         Box(
             modifier = Modifier
@@ -161,13 +161,13 @@ fun Thumb(
 }
 
 @Composable
-fun DrawInvertedTriangle(sz: Dp, color: Color) {
+private fun DrawInvertedTriangle(sz: Dp, color: Color) {
     Canvas(modifier = Modifier.size(sz)) {
         // 绘制一个向下箭头的气泡
         val path = Path().apply {
             moveTo(0f, 0f)
             lineTo(size.width, 0f)
-            lineTo(size.width / 2, size.height*2/3)
+            lineTo(size.width / 2, size.height * 2 / 3)
             close()
             drawPath(this, color = color)
         }

@@ -5,27 +5,31 @@ import androidx.compose.ui.Modifier
 
 
 enum class ModelProvider(
-    val host: String,
+    var model: Model,
     val contentView: @Composable (modifier: Modifier, model: Model, modelChange: (Model) -> Unit) -> Unit,
 ) {
     /**
      * OpenAI
      */
-    OPenAI("https://api.openai.com", contentView = { modifier, model, modelChange ->
-        OpenAiSettingsContent(modifier, model, modelChange)
-    }),
+    OPenAI(
+        Model("https://api.openai.com",
+        "gpt-3.5-turbo",
+        "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+        contentView = { modifier, model, modelChange ->
+            OpenAiSettingsContent(modifier, model, modelChange)
+        }),
 
     /**
      * DeepSeek
      */
-    DeepSeek("https://api.deepseek.com", { modifier, model, modelChange ->
+    DeepSeek( Model("https://api.deepseek.com", "", ""), { modifier, model, modelChange ->
         DeepSeekSettingsContent(modifier, model, modelChange)
     }),
 
     /**
      * Gemini
      */
-    Gemini("https://api.gemini.com", { modifier, model, modelChange ->
+    Gemini( Model("https://api.gemini.com", "", ""), { modifier, model, modelChange ->
         GeminiAiSettingsContent(modifier, model, modelChange)
     });
 
@@ -34,10 +38,9 @@ enum class ModelProvider(
 }
 
 data class Model(
-    val provider: ModelProvider,
-    val host: String = provider.host,
-    val model: String = "gpt-3.5-turbo",
-    val apiKey: String = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    val host: String ,
+    val model: String ,
+    val apiKey: String,
     val temperature: Float = 0.7f,
     val meticulousCreative: Float = 0.7f,
     val topP: Float = 1f,
@@ -47,12 +50,12 @@ data class Model(
 
     )
 
-val Chat_Models: ArrayList<Model>
+val Chat_Models: ArrayList<ModelProvider>
     get() {
         val values = ModelProvider.entries
-        val result = ArrayList<Model>()
+        val result = ArrayList<ModelProvider>()
         for (value in values) {
-            result.add(Model(value))
+            result.add(value)
         }
         return result
     }

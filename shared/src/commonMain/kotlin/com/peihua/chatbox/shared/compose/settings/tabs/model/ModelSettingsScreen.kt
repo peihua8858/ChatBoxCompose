@@ -31,9 +31,9 @@ import org.jetbrains.compose.resources.stringResource
 fun ModelSettingsScreen(modifier: Modifier = Modifier) {
     val colorScheme = MaterialTheme.colorScheme
     val isExpanded = remember { mutableStateOf(false) }
-    val selectedOption = remember { mutableStateOf(Model(ModelProvider.OPenAI)) }
+    val selectedOption = remember { mutableStateOf(ModelProvider.OPenAI) }
     val models = Chat_Models
-    val modelProvider = selectedOption.value.provider
+    val modelProvider = selectedOption.value
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -45,7 +45,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
             onExpandedChange = { isExpanded.value = it },
         ) {
             OutlinedTextField(
-                value = selectedOption.value.provider.name,
+                value = selectedOption.value.name,
                 onValueChange = {
                 },
                 label = { Text(stringResource(Res.string.settingsModelProvider)) },
@@ -60,14 +60,14 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                 onDismissRequest = { isExpanded.value = false },
             ) {
                 models.forEach { item ->
-                    val selected = selectedOption.value.provider == item.provider
+                    val selected = selectedOption.value == item
                     DropdownMenuItem(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(if (selected) colorScheme.secondaryContainer else Color.Transparent),
                         text = {
                             Text(
-                                text = item.provider.name,
+                                text = item.name,
                                 color = if (selected) colorScheme.onSecondaryContainer else colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -81,6 +81,6 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        modelProvider.contentView(Modifier, selectedOption.value, { selectedOption.value = it })
+        modelProvider.contentView(Modifier, selectedOption.value.model, { selectedOption.value.model = it })
     }
 }
