@@ -1,6 +1,7 @@
 package com.peihua.chatbox.shared.compose.settings.tabs.model
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,6 +59,19 @@ fun OpenAiSettingsContent(
                 modelChange(provider)
             },
             label = { ScaleText(stringResource(Res.string.settingsModelProviderOpenAI)) },
+            placeholder = { ScaleText(model.apiKeyPlaceholder) },
+            trailingIcon = {
+                if (apiKey.value.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Outlined.Clear,
+                        contentDescription = "",
+                        modifier = Modifier.clickable {
+                            apiKey.value = ""
+                        }
+                    )
+                }
+
+            },
             textStyle = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth()
         )
@@ -67,6 +82,17 @@ fun OpenAiSettingsContent(
                 hostState.value = it
                 provider.model = model.copy(host = it)
                 modelChange(provider)
+            },
+            trailingIcon = {
+                if (hostState.value.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Outlined.Clear,
+                        contentDescription = "",
+                        modifier = Modifier.clickable {
+                            hostState.value = ""
+                        }
+                    )
+                }
             },
             label = { ScaleText(stringResource(Res.string.settingsModelProviderOpenAIHost)) },
             textStyle = MaterialTheme.typography.labelMedium,

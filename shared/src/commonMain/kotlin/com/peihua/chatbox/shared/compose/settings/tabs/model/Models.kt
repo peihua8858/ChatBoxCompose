@@ -12,9 +12,12 @@ enum class ModelProvider(
      * OpenAI
      */
     OPenAI(
-        Model("https://api.openai.com",
-        "gpt-3.5-turbo",
-        "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"),
+        Model(
+            "https://api.openai.com",
+            "gpt-3.5-turbo",
+            apiKey = "",
+            apiKeyPlaceholder = "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        ),
         contentView = { modifier, provider, modelChange ->
             OpenAiSettingsContent(modifier, provider, modelChange)
         }),
@@ -22,14 +25,14 @@ enum class ModelProvider(
     /**
      * DeepSeek
      */
-    DeepSeek( Model("https://api.deepseek.com", "", ""), { modifier, provider, modelChange ->
+    DeepSeek(Model("https://api.deepseek.com", "","", ""), { modifier, provider, modelChange ->
         DeepSeekSettingsContent(modifier, provider, modelChange)
     }),
 
     /**
      * Gemini
      */
-    Gemini( Model("https://api.gemini.com", "", ""), { modifier, provider, modelChange ->
+    Gemini(Model("https://api.gemini.com", "","", ""), { modifier, provider, modelChange ->
         GeminiAiSettingsContent(modifier, provider, modelChange)
     });
 
@@ -38,9 +41,10 @@ enum class ModelProvider(
 }
 
 data class Model(
-    val host: String ,
-    val model: String ,
+    val host: String,
+    val model: String,
     val apiKey: String,
+    val apiKeyPlaceholder: String ,
     val temperature: Float = 0.7f,
     val meticulousCreative: Float = 0.7f,
     val topP: Float = 1f,
