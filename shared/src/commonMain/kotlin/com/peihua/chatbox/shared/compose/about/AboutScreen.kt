@@ -9,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +17,7 @@ import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.about
 import com.peihua.chatbox.shared.components.ChatBoxTopBar
 import com.peihua.chatbox.shared.components.ColorView
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.compose.navigateBack
 import com.peihua.chatbox.shared.theme.Colors
 import org.jetbrains.compose.resources.stringResource
@@ -61,7 +61,7 @@ fun AboutContent(modifier: Modifier = Modifier) {
                 Colors.DeepOrange, Colors.Orange,
                 Colors.Yellow, Colors.Lime, Colors.Amber
             ).forEach { colorPalette ->
-                Text(
+                ScaleText(
                     text = colorPalette.name,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.primary

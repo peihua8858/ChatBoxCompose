@@ -23,8 +23,9 @@ import androidx.navigation.compose.rememberNavController
 import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScalerData
+import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.di.FactoryImpl
+import com.peihua.chatbox.shared.platform
 import com.peihua.chatbox.shared.theme.ChatBoxTheme
 import com.peihua.chatbox.shared.theme.ThemeMode
 import com.peihua.chatbox.shared.utils.dLog
@@ -110,14 +111,14 @@ val settings = mutableStateOf<Settings>(
         showModelName = true,
         showTokenUsage = true,
         spellCheck = true,
-        fontTextScalerData = TextScalerData(1.0f, "Normal"),
+        textScaler = TextScaler(1.0f, "Normal"),
     )
 )
 
 fun changeSettings(
     themeMode: ThemeMode = settings.value.themeMode,
     language: String = settings.value.language,
-    fontTextScalerData: TextScalerData = settings.value.fontTextScalerData,
+    textScaler: TextScaler = settings.value.textScaler,
     showAvatar: Boolean = settings.value.showAvatar,
     showWordCount: Boolean = settings.value.showWordCount,
     showTokenCount: Boolean = settings.value.showTokenCount,
@@ -129,7 +130,7 @@ fun changeSettings(
         settings.value.copy(
             themeMode = themeMode,
             language = language,
-            fontTextScalerData = fontTextScalerData,
+            textScaler = textScaler,
             showAvatar = showAvatar,
             showWordCount = showWordCount,
             showTokenCount = showTokenCount,
@@ -141,6 +142,7 @@ fun changeSettings(
 }
 
 fun changeSettings(st: Settings) {
+    platform().changeLanguage(st.language)
     settings.value = st
     appDataStore.settings.updateSettings(st)
 }
@@ -169,7 +171,6 @@ fun ChatBoxApp(
     // 记住导航控制器实例
     val navController = rememberNavController()
     appRouter = navController
-//    println("appConfig: ${appConfig.value}")
     ChatBoxTheme(settings.value) { model, colorScheme ->
         theme(model, colorScheme)
         ChatBoxNavHost(

@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
 import com.peihua.chatbox.shared.compose.Settings
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScalerData
+import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.di.json
 import com.peihua.chatbox.shared.theme.ThemeMode
 import com.peihua.chatbox.shared.utils.WorkScope
@@ -59,7 +59,7 @@ class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope
                 showModelName = true,
                 showTokenUsage = true,
                 spellCheck = true,
-                fontTextScalerData = TextScalerData(1.0f, "Normal"),
+                textScaler = TextScaler(1.0f, "Normal"),
             )
 
         override suspend fun readFrom(source: BufferedSource): Settings {

@@ -1,6 +1,6 @@
 package com.peihua.chatbox.shared.compose
 
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScalerData
+import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.theme.ThemeMode
 import kotlinx.serialization.Serializable
 @Serializable
@@ -13,5 +13,5 @@ data class Settings(
     val showModelName: Boolean,
     val showTokenUsage: Boolean,
     val spellCheck: Boolean,
-    val fontTextScalerData: TextScalerData
+    val textScaler: TextScaler
 )

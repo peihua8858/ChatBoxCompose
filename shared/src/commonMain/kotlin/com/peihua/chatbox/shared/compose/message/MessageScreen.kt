@@ -31,7 +31,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
@@ -58,6 +57,7 @@ import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.m3.markdownTypography
 import com.peihua.chatbox.shared.components.stateView.ErrorView
 import com.peihua.chatbox.shared.components.stateView.LoadingView
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.db.UserType
 import com.peihua.chatbox.shared.theme.messageBotCardBackground
@@ -276,7 +276,7 @@ fun MessageCard(message: ChatBoxMessage, isHuman: Boolean = false, isLast: Boole
 
 @Composable
 fun HumanMessageCard(message: ChatBoxMessage) {
-    Text(
+    ScaleText(
         text = message.message.value,
         color = MaterialTheme.colorScheme.onPrimary,
         modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),

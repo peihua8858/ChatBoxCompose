@@ -8,7 +8,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +18,7 @@ import chatboxcompose.shared.generated.resources.settingsNewChatTips
 import chatboxcompose.shared.generated.resources.settingsResetDefault
 import chatboxcompose.shared.generated.resources.settingsSpellCheck
 import com.peihua.chatbox.shared.components.SwitchListTile
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.compose.changeSettings
 import com.peihua.chatbox.shared.compose.settings
 import org.jetbrains.compose.resources.stringResource
@@ -35,11 +35,11 @@ fun ChatSettingsScreen(modifier: Modifier = Modifier) {
     ) {
         OutlinedTextField(
             value = chatTips.value,
-            label = { Text(text = stringResource(Res.string.settingsNewChatTips)) },
+            label = { ScaleText(text = stringResource(Res.string.settingsNewChatTips)) },
             onValueChange = {
                 chatTips.value = it
             })
-        Text(
+        ScaleText(
             text = stringResource(Res.string.settingsResetDefault),
             style = MaterialTheme.typography.labelSmall,
             modifier = Modifier
@@ -53,7 +53,7 @@ fun ChatSettingsScreen(modifier: Modifier = Modifier) {
             onCheckedChange = {
                 changeSettings(spellCheck = it)
             }) {
-            Text(
+            ScaleText(
                 modifier = Modifier.padding(start = 8.dp),
                 text = stringResource(Res.string.settingsSpellCheck)
             )

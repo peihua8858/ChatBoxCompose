@@ -15,7 +15,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.settingsModelProvider
+import com.peihua.chatbox.shared.components.text.ScaleText
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +48,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                 value = selectedOption.value.name,
                 onValueChange = {
                 },
-                label = { Text(stringResource(Res.string.settingsModelProvider)) },
+                label = { ScaleText(stringResource(Res.string.settingsModelProvider)) },
                 readOnly = true,
                 textStyle = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
@@ -66,7 +66,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                             .fillMaxSize()
                             .background(if (selected) colorScheme.secondaryContainer else Color.Transparent),
                         text = {
-                            Text(
+                            ScaleText(
                                 text = item.name,
                                 color = if (selected) colorScheme.onSecondaryContainer else colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.labelMedium

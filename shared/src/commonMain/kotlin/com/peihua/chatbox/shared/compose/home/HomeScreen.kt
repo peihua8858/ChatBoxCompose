@@ -31,8 +31,6 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -60,15 +58,16 @@ import com.peihua.chatbox.shared.components.ChatBoxTopBar
 import com.peihua.chatbox.shared.components.NavigationIcon
 import com.peihua.chatbox.shared.components.stateView.ErrorView
 import com.peihua.chatbox.shared.components.stateView.LoadingView
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.compose.ScreenRouter
 import com.peihua.chatbox.shared.compose.message.MessageScreen
 import com.peihua.chatbox.shared.compose.navigateTo
 import com.peihua.chatbox.shared.data.db.Menu
-import com.peihua.chatbox.shared.viewmodel.HomeViewModel
 import com.peihua.chatbox.shared.utils.ResultData
+import com.peihua.chatbox.shared.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.*
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * 主屏幕组件
@@ -161,7 +160,7 @@ fun NavigationDrawer(
                             contentDescription = ""
                         )
 
-                        Text(
+                        ScaleText(
                             text = "ChatBox",
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -276,7 +275,7 @@ fun ChatBoxDrawerItem(
                         editName.value = it
                     }, modifier = Modifier.weight(1f))
                 } else {
-                    Text(editName.value, modifier = Modifier.weight(1f))
+                    ScaleText(editName.value, modifier = Modifier.weight(1f))
                 }
                 if (isSelected) {
                     IconButton(onClick = {

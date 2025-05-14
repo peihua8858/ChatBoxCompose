@@ -17,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,6 +37,7 @@ import chatboxcompose.shared.generated.resources.settingsRestoreTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
 import com.peihua.chatbox.shared.components.ExtendedListTile
 import com.peihua.chatbox.shared.components.tabLayout.TabPager
+import com.peihua.chatbox.shared.components.text.ScaleText
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -61,7 +61,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = ""
                     )
-                    Text(
+                    ScaleText(
                         text = stringResource(Res.string.settingsProxy),
                         Modifier.padding(start = 4.dp)
                     )
@@ -72,7 +72,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
                         value = "",
-                        label = { Text(text = stringResource(Res.string.settingsProxyHost)) },
+                        label = { ScaleText(text = stringResource(Res.string.settingsProxyHost)) },
                         onValueChange = {},
                         trailingIcon = {
                             Icon(
@@ -84,7 +84,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                     OutlinedTextField(
                         modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
-                        label = { Text(text = stringResource(Res.string.settingsProxyPort)) },
+                        label = { ScaleText(text = stringResource(Res.string.settingsProxyPort)) },
                         trailingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.Clear,
@@ -95,7 +95,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                     OutlinedTextField(
                         modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
-                        label = { Text(text = stringResource(Res.string.settingsProxyUsername)) },
+                        label = { ScaleText(text = stringResource(Res.string.settingsProxyUsername)) },
                         trailingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.Clear,
@@ -106,7 +106,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                     OutlinedTextField(
                         modifier = Modifier.padding(top = 8.dp).fillMaxWidth(),
                         value = "",
-                        label = { Text(text = stringResource(Res.string.settingsProxyPassword)) },
+                        label = { ScaleText(text = stringResource(Res.string.settingsProxyPassword)) },
                         trailingIcon = {
                             Icon(
                                 imageVector = Icons.Outlined.Clear,
@@ -132,7 +132,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = ""
                     )
-                    Text(
+                    ScaleText(
                         text = stringResource(Res.string.settingsKeyboardShortcuts),
                         Modifier.padding(start = 4.dp)
                     )
@@ -140,7 +140,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
             },
             content = {
                 Column(modifier = Modifier.padding(8.dp)) {
-                    Text(text = "无")
+                    ScaleText(text = "无")
                 }
             }
         )
@@ -160,7 +160,7 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = ""
                     )
-                    Text(
+                    ScaleText(
                         text = stringResource(Res.string.settingsBackupAndRestore),
                         Modifier.padding(start = 4.dp)
                     )
@@ -192,7 +192,7 @@ fun BackupView(modifier: Modifier = Modifier) {
         CheckboxListTile(checked = true, onCheckedChange = {
 
         }) {
-            Text(text = "Settings")
+            ScaleText(text = "Settings")
         }
         CheckboxListTile(
             modifier = Modifier.padding(top = 8.dp),
@@ -200,14 +200,14 @@ fun BackupView(modifier: Modifier = Modifier) {
             onCheckedChange = {
 
             }) {
-            Text(text = "Api key")
+            ScaleText(text = "Api key")
         }
         CheckboxListTile(
             modifier = Modifier.padding(top = 8.dp),
             checked = true,
             onCheckedChange = {
 
-            }) { Text(text = stringResource(Res.string.settingsBackupChat)) }
+            }) { ScaleText(text = stringResource(Res.string.settingsBackupChat)) }
 
         Button(
             modifier = Modifier.padding(top = 8.dp),
@@ -215,7 +215,7 @@ fun BackupView(modifier: Modifier = Modifier) {
             onClick = {
                 // 导出备份数据
             }) {
-            Text(text = stringResource(Res.string.settingsBackupAndRestoreExport))
+            ScaleText(text = stringResource(Res.string.settingsBackupAndRestoreExport))
         }
     }
 }
@@ -227,14 +227,14 @@ fun RestoreView(modifier: Modifier = Modifier) {
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text(text = stringResource(Res.string.settingsRestoreTips))
+        ScaleText(text = stringResource(Res.string.settingsRestoreTips))
         Button(
             modifier = Modifier.padding(top = 8.dp),
             shape = MaterialTheme.shapes.small,
             onClick = {
                 // 导入备份数据
             }) {
-            Text(text = stringResource(Res.string.settingsBackupAndRestoreImport))
+            ScaleText(text = stringResource(Res.string.settingsBackupAndRestoreImport))
         }
     }
 }

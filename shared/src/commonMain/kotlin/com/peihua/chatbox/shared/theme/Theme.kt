@@ -14,6 +14,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.peihua.chatbox.shared.compose.Settings
+import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.platform
 
 private val lightScheme = lightColorScheme(
@@ -275,6 +276,7 @@ fun SliderColors(): SliderColors {
 @Composable
 fun ChatBoxTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    textScale: TextScaler = TextScaler.Default,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable() (ThemeMode, colorScheme: ColorScheme) -> Unit,
@@ -286,12 +288,14 @@ fun ChatBoxTheme(
         else -> lightScheme
     }
 
-    colorScheme.messageBotCardBackground = if(darkTheme) colorScheme.surfaceVariant else colorScheme.background
-    colorScheme.messageHumanCardBackground = if(darkTheme) colorScheme.onSurface else colorScheme.onSurfaceVariant
+    colorScheme.messageBotCardBackground =
+        if (darkTheme) colorScheme.surfaceVariant else colorScheme.background
+    colorScheme.messageHumanCardBackground =
+        if (darkTheme) colorScheme.onSurface else colorScheme.onSurfaceVariant
     MaterialTheme(
         shapes = customShapes,
         colorScheme = colorScheme,
-//    typography = AppTypography,
+        typography = ChatBoxTypography(textScale.scale),
         content = {
             content(if (darkTheme) ThemeMode.Dark else ThemeMode.Light, colorScheme)
         }
@@ -309,15 +313,15 @@ fun ChatBoxTheme(
 
     when (themeMode) {
         ThemeMode.Dark -> {
-            ChatBoxTheme(darkTheme = true, content = content)
+            ChatBoxTheme(darkTheme = true, textScale = config.textScaler, content = content)
         }
 
         ThemeMode.Light -> {
-            ChatBoxTheme(darkTheme = false, content = content)
+            ChatBoxTheme(darkTheme = false, textScale = config.textScaler,content = content)
         }
 
         ThemeMode.System -> {
-            ChatBoxTheme(darkTheme = isSystemInDarkTheme(), content = content)
+            ChatBoxTheme(darkTheme = isSystemInDarkTheme(), textScale = config.textScaler, content = content)
         }
     }
 }

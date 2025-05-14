@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.icons.ChatIcons
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +35,7 @@ fun ChatBoxTopBar(
     TopAppBar(
         title = {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
+                ScaleText(
                     style = typography.titleMedium,
                     text = title(),
                     textAlign = TextAlign.Center,

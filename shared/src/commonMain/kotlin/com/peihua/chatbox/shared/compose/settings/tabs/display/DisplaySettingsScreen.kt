@@ -23,7 +23,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +45,7 @@ import chatboxcompose.shared.generated.resources.text_font_size
 import chatboxcompose.shared.generated.resources.theme
 import com.peihua.chatbox.shared.components.ChatBoxSliderTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.compose.changeSettings
 import com.peihua.chatbox.shared.compose.settings
 import com.peihua.chatbox.shared.localeProvider
@@ -60,8 +60,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
     val localeList = languageCodes.map { Locale(it) }
     val isExpanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(Locale.current) }
-    val textScalerData =settings.value.fontTextScalerData
-    val sliderPosition = remember { mutableFloatStateOf(textScalerData.textScaler) }
+    val textScaler =settings.value.textScaler
+    val sliderPosition = remember { mutableFloatStateOf(textScaler.scale) }
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = modifier
@@ -77,7 +77,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 value = selectedOption.value.displayName,
                 onValueChange = {
                 },
-                label = { Text(stringResource(Res.string.language)) },
+                label = { ScaleText(stringResource(Res.string.language)) },
                 readOnly = true,
                 textStyle = MaterialTheme.typography.labelMedium,
                 modifier = Modifier
@@ -95,7 +95,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                             .fillMaxSize()
                             .background(if (selected) colorScheme.secondaryContainer else Color.Transparent),
                         text = {
-                            Text(
+                            ScaleText(
                                 text = locale.displayName,
                                 color = if (selected) colorScheme.onSecondaryContainer else colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.labelMedium
@@ -114,17 +114,21 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 16.dp),
             value = sliderPosition.value,
             title = stringResource(Res.string.text_font_size),
-            valueRange =  0.5f..2f,
+            steps = 2,
+            valueRange =  0.8f..1.4f,
+            thumbText = {
+                TextScaler.parse(it)
+            },
             onChangValue = {
                 sliderPosition.value = it
-                changeSettings(fontTextScalerData = textScalerData.copy(textScaler = it))
+                changeSettings(textScaler = textScaler.copy(scale = it))
             })
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(text = stringResource(Res.string.theme))
+            ScaleText(text = stringResource(Res.string.theme))
             SingleChoiceSegmentedButtonRow(
                 modifier = Modifier.padding(
                     start = 16.dp,
@@ -201,7 +205,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
             onCheckedChange = {
             },
             title = {
-                Text(text = stringResource(Res.string.settingsShowWordCount))
+                ScaleText(text = stringResource(Res.string.settingsShowWordCount))
             }
         )
         CheckboxListTile(
@@ -211,7 +215,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 changeSettings(showTokenCount = it)
             },
             title = {
-                Text(text = stringResource(Res.string.settingsShowTokenCount))
+                ScaleText(text = stringResource(Res.string.settingsShowTokenCount))
             }
         )
         CheckboxListTile(
@@ -221,7 +225,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 changeSettings(showTokenUsage = it)
             },
             title = {
-                Text(text = stringResource(Res.string.settingsShowTokenUsage))
+                ScaleText(text = stringResource(Res.string.settingsShowTokenUsage))
             }
         )
         CheckboxListTile(
@@ -231,7 +235,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                 changeSettings(showModelName = it)
             },
             title = {
-                Text(text = stringResource(Res.string.settingsShowModelName))
+                ScaleText(text = stringResource(Res.string.settingsShowModelName))
             }
         )
     }

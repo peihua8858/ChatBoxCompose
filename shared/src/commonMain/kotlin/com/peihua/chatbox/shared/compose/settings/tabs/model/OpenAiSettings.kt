@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -18,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,8 +28,9 @@ import chatboxcompose.shared.generated.resources.settingsModelProviderModelAndTo
 import chatboxcompose.shared.generated.resources.settingsModelProviderOpenAI
 import chatboxcompose.shared.generated.resources.settingsModelProviderOpenAIHost
 import chatboxcompose.shared.generated.resources.settingsModelTemperature
-import com.peihua.chatbox.shared.components.ExtendedListTile
 import com.peihua.chatbox.shared.components.ChatBoxSliderTips
+import com.peihua.chatbox.shared.components.ExtendedListTile
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.theme.Colors
 import org.jetbrains.compose.resources.stringResource
 
@@ -58,7 +56,7 @@ fun OpenAiSettingsContent(
                 provider.model = model.copy(apiKey = it)
                 modelChange(provider)
             },
-            label = { Text(stringResource(Res.string.settingsModelProviderOpenAI)) },
+            label = { ScaleText(stringResource(Res.string.settingsModelProviderOpenAI)) },
             textStyle = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth()
         )
@@ -70,7 +68,7 @@ fun OpenAiSettingsContent(
                 provider.model = model.copy(host = it)
                 modelChange(provider)
             },
-            label = { Text(stringResource(Res.string.settingsModelProviderOpenAIHost)) },
+            label = { ScaleText(stringResource(Res.string.settingsModelProviderOpenAIHost)) },
             textStyle = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth()
         )
@@ -90,7 +88,7 @@ fun OpenAiSettingsContent(
                         imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = ""
                     )
-                    Text(
+                    ScaleText(
                         text = stringResource(Res.string.settingsModelProviderModelAndToken),
                         Modifier.padding(start = 4.dp)
                     )
@@ -117,7 +115,7 @@ fun ModelAndToken(
     val modelState = remember { mutableStateOf(selectedOption.model) }
     val temperatureState = remember { mutableStateOf(selectedOption.temperature) }
     Column(modifier = modifier) {
-        Text(
+        ScaleText(
             text = stringResource(Res.string.settingsModelAndTokenTips),
             style = MaterialTheme.typography.bodySmall,
             color = Colors.Yellow[500]
@@ -129,7 +127,7 @@ fun ModelAndToken(
                 modelState.value = it
                 changeModel(selectedOption.copy(model = it))
             },
-            label = { Text(stringResource(Res.string.model)) },
+            label = { ScaleText(stringResource(Res.string.model)) },
             textStyle = MaterialTheme.typography.labelMedium,
             modifier = Modifier.fillMaxWidth()
         )

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -24,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.peihua.chatbox.shared.components.text.ScaleText
 
 @Composable
 fun rememberDialogShowing(isShowing: Boolean) = remember { mutableStateOf(isShowing) }
@@ -75,7 +75,7 @@ fun ShowDialog(
                             },
                         contentAlignment = Alignment.Center // 垂直和水平居中
                     ) {
-                        Text(
+                        ScaleText(
                             text = negativeText,
                             textAlign = TextAlign.Center
                         )
@@ -95,7 +95,7 @@ fun ShowDialog(
                             },
                         contentAlignment = Alignment.Center // 垂直和水平居中
                     ) {
-                        Text(
+                        ScaleText(
                             text = neutralText,
                             textAlign = TextAlign.Center
                         )
@@ -115,7 +115,7 @@ fun ShowDialog(
                             },
                         contentAlignment = Alignment.Center // 垂直和水平居中
                     ) {
-                        Text(
+                        ScaleText(
                             text = positiveText,
                             textAlign = TextAlign.Center
                         )

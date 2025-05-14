@@ -19,7 +19,6 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.SliderDefaults.Track
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.theme.SliderColors
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +43,10 @@ fun ChatBoxSliderTips(
     title: String,
     titleOrientation: Orientation = Orientation.Horizontal,
     colors: SliderColors = SliderColors(),
+    steps: Int = 0,
+    thumbText: @Composable (Float) -> String = {
+        it.toString()
+    },
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onChangValue: (Float) -> Unit,
 ) {
@@ -52,7 +56,7 @@ fun ChatBoxSliderTips(
             horizontalAlignment = Alignment.Start,
             modifier = modifier
         ) {
-            Text(text = title, style = MaterialTheme.typography.labelLarge)
+            ScaleText(text = title, style = MaterialTheme.typography.labelLarge)
             Spacer(modifier = Modifier.height(4.dp))
             ChatBoxSlider(
                 modifier = Modifier,
@@ -68,11 +72,13 @@ fun ChatBoxSliderTips(
             horizontalArrangement = Arrangement.Start,
             modifier = modifier
         ) {
-            Text(text = title, style = MaterialTheme.typography.labelLarge)
+            ScaleText(text = title, style = MaterialTheme.typography.labelLarge)
             ChatBoxSlider(
                 modifier = Modifier.padding(start = 4.dp),
                 value = value,
                 colors = colors,
+                steps = steps,
+                thumbText = thumbText,
                 valueRange = valueRange,
                 onChangValue = onChangValue
             )
@@ -82,10 +88,14 @@ fun ChatBoxSliderTips(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChatBoxSlider(
+fun ChatBoxSlider(
     modifier: Modifier = Modifier,
     value: Float,
     colors: SliderColors = SliderColors(),
+    steps: Int = 0,
+    thumbText:@Composable (Float) -> String = {
+        it.toString()
+    },
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
     onChangValue: (Float) -> Unit,
 ) {
@@ -99,12 +109,12 @@ private fun ChatBoxSlider(
             onChangValue(it)
         },
         colors = colors,
-        steps = 2,
+        steps = steps,
         valueRange = valueRange,
         interactionSource = interactionSource,
         thumb = {
             Thumb(
-                value = sliderPosition.floatValue,
+                text = thumbText(sliderPosition.floatValue),
                 colors = colors,
                 thumbSize = DpSize(24.dp, 24.dp)
             )
@@ -122,7 +132,7 @@ private fun ChatBoxSlider(
 @Composable
 private fun Thumb(
     modifier: Modifier = Modifier,
-    value: Float,
+    text: String,
     colors: SliderColors = SliderDefaults.colors(),
     thumbSize: DpSize,
 ) {
@@ -138,9 +148,9 @@ private fun Thumb(
                 .background(color = colors.thumbColor)
                 .padding(4.dp)
         ) {
-            Text(
+            ScaleText(
                 style = MaterialTheme.typography.labelLarge,
-                text = value.toString(),
+                text = text,
                 color = MaterialTheme.colorScheme.onPrimary,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
