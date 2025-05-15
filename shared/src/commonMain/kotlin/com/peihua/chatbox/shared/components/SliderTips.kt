@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -62,6 +63,8 @@ fun ChatBoxSliderTips(
                 modifier = Modifier,
                 value = value,
                 colors = colors,
+                steps = steps,
+                thumbText = thumbText,
                 valueRange = valueRange,
                 onChangValue = onChangValue
             )
@@ -93,7 +96,7 @@ fun ChatBoxSlider(
     value: Float,
     colors: SliderColors = SliderColors(),
     steps: Int = 0,
-    thumbText:@Composable (Float) -> String = {
+    thumbText: @Composable (Float) -> String = {
         it.toString()
     },
     valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
@@ -102,7 +105,7 @@ fun ChatBoxSlider(
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     val sliderPosition = remember { mutableFloatStateOf(value) }
     Slider(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         value = sliderPosition.floatValue,
         onValueChange = {
             sliderPosition.floatValue = it
