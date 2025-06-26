@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
@@ -36,6 +37,7 @@ import chatboxcompose.shared.generated.resources.settingsModelTemperature
 import chatboxcompose.shared.generated.resources.settingsModelTopP
 import com.peihua.chatbox.shared.components.ChatBoxSliderTips
 import com.peihua.chatbox.shared.components.ExtendedListTile
+import com.peihua.chatbox.shared.components.RotatingView
 import com.peihua.chatbox.shared.components.text.ScaleText
 import com.peihua.chatbox.shared.format
 import com.peihua.chatbox.shared.theme.Colors
@@ -115,13 +117,13 @@ fun OpenAiSettingsContent(
                         .padding(16.dp)
 
                 ) {
-                    Icon(
-                        imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = ""
+                    RotatingView(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        rotationAngle = if (isExtended) 180f else 0f
                     )
                     ScaleText(
                         text = stringResource(Res.string.settingsModelProviderModelAndToken),
-                        Modifier.padding(start = 4.dp)
+                        Modifier.padding(start = 4.dp).align(Alignment.CenterVertically),
                     )
                 }
             },

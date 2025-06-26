@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
@@ -36,6 +37,7 @@ import chatboxcompose.shared.generated.resources.settingsProxyUsername
 import chatboxcompose.shared.generated.resources.settingsRestoreTips
 import com.peihua.chatbox.shared.components.CheckboxListTile
 import com.peihua.chatbox.shared.components.ExtendedListTile
+import com.peihua.chatbox.shared.components.RotatingView
 import com.peihua.chatbox.shared.components.tabLayout.TabPager
 import com.peihua.chatbox.shared.components.text.ScaleText
 import org.jetbrains.compose.resources.stringResource
@@ -57,13 +59,13 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         .padding(16.dp)
 
                 ) {
-                    Icon(
-                        imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = ""
+                    RotatingView(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        rotationAngle = if (isExtended) 180f else 0f
                     )
                     ScaleText(
                         text = stringResource(Res.string.settingsProxy),
-                        Modifier.padding(start = 4.dp)
+                        Modifier.padding(start = 4.dp).align(Alignment.CenterVertically),
                     )
                 }
             },
@@ -128,13 +130,13 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         .padding(16.dp)
 
                 ) {
-                    Icon(
-                        imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = ""
+                    RotatingView(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        rotationAngle = if (isExtended) 180f else 0f
                     )
                     ScaleText(
                         text = stringResource(Res.string.settingsKeyboardShortcuts),
-                        Modifier.padding(start = 4.dp)
+                        Modifier.padding(start = 4.dp).align(Alignment.CenterVertically),
                     )
                 }
             },
@@ -156,13 +158,13 @@ fun OtherSettingScreen(modifier: Modifier = Modifier) {
                         .padding(16.dp)
 
                 ) {
-                    Icon(
-                        imageVector = if (isExtended) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = ""
+                    RotatingView(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        rotationAngle = if (isExtended) 180f else 0f
                     )
                     ScaleText(
                         text = stringResource(Res.string.settingsBackupAndRestore),
-                        Modifier.padding(start = 4.dp)
+                        Modifier.padding(start = 4.dp).align(Alignment.CenterVertically),
                     )
                 }
             },
