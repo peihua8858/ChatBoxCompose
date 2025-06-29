@@ -5,12 +5,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.peihua.chatbox.shared.compose.Settings
+import com.peihua.chatbox.shared.compose.settings
+import com.peihua.chatbox.shared.compose.settings.tabs.model.ModelProvider
 import com.peihua.chatbox.shared.data.Message
 import com.peihua.chatbox.shared.data.Message.Companion.ChatBoxMessage
 import com.peihua.chatbox.shared.data.database.AppDatabase
 import com.peihua.chatbox.shared.data.database.MessageDao
 import com.peihua.chatbox.shared.data.db.ChatBoxMessage
 import com.peihua.chatbox.shared.data.remote.repository.ChatAiRepository
+import com.peihua.chatbox.shared.data.remote.repository.ChatAiRepositoryFactory
 import com.peihua.chatbox.shared.data.remote.repository.impl.OpenAiRepositoryImpl
 import com.peihua.chatbox.shared.di.Factory
 import com.peihua.chatbox.shared.di.FactoryImpl
@@ -30,7 +34,7 @@ class RoomMessageViewModel(
     val factory: Factory = FactoryImpl(),
     val database: AppDatabase = factory.createRoomDatabase(),
     val messageQueries: MessageDao = database.messageDao(),
-    val repository: ChatAiRepository = OpenAiRepositoryImpl(),
+    val repository: ChatAiRepository = ChatAiRepositoryFactory.create(settings.value.showModelName),
 ) : ViewModel() {
     val enInputState = mutableStateOf(true)
     private val _messages = mutableStateListOf<ChatBoxMessage>()

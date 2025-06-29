@@ -1,11 +1,14 @@
 package com.peihua.chatbox.shared.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import androidx.compose.ui.unit.dp
 fun ExtendedListTile(
     modifier: Modifier = Modifier,
     isExtended: Boolean,
+    durationMillis: Int = 800,
     title: @Composable (Boolean) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -41,7 +45,15 @@ fun ExtendedListTile(
                 }) {
             title(isExtended.value)
         }
-        if (isExtended.value) {
+        AnimatedVisibility(
+            visible = isExtended.value,
+            enter =expandVertically(),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = durationMillis)
+            ),
+            // 关键：动画结束后才真正移除内容，加上这句会内容先消失，再折叠
+//            modifier = Modifier.animateContentSize()
+        ) {
             content()
         }
     }
