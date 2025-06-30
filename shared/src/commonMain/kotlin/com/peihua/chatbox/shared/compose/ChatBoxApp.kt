@@ -23,7 +23,9 @@ import androidx.navigation.compose.rememberNavController
 import com.peihua.chatbox.shared.compose.about.AboutScreen
 import com.peihua.chatbox.shared.compose.home.HomeScreen
 import com.peihua.chatbox.shared.compose.settings.SettingsScreen
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
+import com.peihua.chatbox.shared.compose.settings.tabs.display.DisplaySettings
+import com.peihua.chatbox.shared.compose.settings.tabs.model.ModelSettings
+import com.peihua.chatbox.shared.compose.settings.tabs.other.OtherSettings
 import com.peihua.chatbox.shared.di.FactoryImpl
 import com.peihua.chatbox.shared.platform
 import com.peihua.chatbox.shared.theme.ChatBoxTheme
@@ -101,48 +103,24 @@ fun navigate(
     appRouter.navigate(route, navOptions, navigatorExtras)
 }
 
-val settings = mutableStateOf<Settings>(
-    Settings(
-        themeMode = ThemeMode.Light,
-        language = "zh",
-        showAvatar = true,
-        showWordCount = true,
-        showTokenCount = true,
-        showModelName = true,
-        showTokenUsage = true,
-        spellCheck = true,
-        textScaler = TextScaler(1.0f, "Normal"),
-    )
-)
+val settings = mutableStateOf(Settings.default())
 
 fun changeSettings(
-    themeMode: ThemeMode = settings.value.themeMode,
-    language: String = settings.value.language,
-    textScaler: TextScaler = settings.value.textScaler,
-    showAvatar: Boolean = settings.value.showAvatar,
-    showWordCount: Boolean = settings.value.showWordCount,
-    showTokenCount: Boolean = settings.value.showTokenCount,
-    showModelName: Boolean = settings.value.showModelName,
-    showTokenUsage: Boolean = settings.value.showTokenUsage,
-    spellCheck: Boolean = settings.value.spellCheck,
+    display: DisplaySettings = settings.value.display,
+    aiModel: ModelSettings = settings.value.aiModel,
+    proxy: OtherSettings = settings.value.proxy,
 ) {
     changeSettings(
         settings.value.copy(
-            themeMode = themeMode,
-            language = language,
-            textScaler = textScaler,
-            showAvatar = showAvatar,
-            showWordCount = showWordCount,
-            showTokenCount = showTokenCount,
-            showModelName = showModelName,
-            showTokenUsage = showTokenUsage,
-            spellCheck = spellCheck,
+            display = display,
+            aiModel = aiModel,
+            proxy = proxy,
         )
     )
 }
 
 fun changeSettings(st: Settings) {
-    platform().changeLanguage(st.language)
+    platform().changeLanguage(st.display.language)
     settings.value = st
     appDataStore.settings.updateSettings(st)
 }

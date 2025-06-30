@@ -51,9 +51,9 @@ fun OpenAiSettingsContent(
     provider: ModelProvider,
     modelChange: (ModelProvider) -> Unit,
 ) {
-    val model = provider.model
-    val apiKey = remember { mutableStateOf(model.apiKey) }
-    val hostState = remember { mutableStateOf(model.host) }
+    val settings = provider.settings
+    val apiKey = remember { mutableStateOf(settings.apiKey) }
+    val hostState = remember { mutableStateOf(settings.host) }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,11 +62,11 @@ fun OpenAiSettingsContent(
             value = apiKey.value,
             onValueChange = {
                 apiKey.value = it
-                provider.model = model.copy(apiKey = it)
+                provider.settings = settings.copy(apiKey = it)
                 modelChange(provider)
             },
             label = { ScaleText(stringResource(Res.string.settingsModelProviderOpenAI)) },
-            placeholder = { ScaleText(model.apiKeyPlaceholder) },
+            placeholder = { ScaleText(settings.apiKeyPlaceholder) },
             trailingIcon = {
                 if (apiKey.value.isNotEmpty()) {
                     Icon(
@@ -87,7 +87,7 @@ fun OpenAiSettingsContent(
             value = hostState.value,
             onValueChange = {
                 hostState.value = it
-                provider.model = model.copy(host = it)
+                provider.settings = settings.copy(host = it)
                 modelChange(provider)
             },
             trailingIcon = {
@@ -130,9 +130,9 @@ fun OpenAiSettingsContent(
             content = {
                 ModelAndToken(
                     modifier = Modifier.padding(16.dp),
-                    selectedOption = model
+                    selectedOption = settings
                 ) {
-                    provider.model = it
+                    provider.settings = it
                     modelChange(provider)
                 }
             })
@@ -142,10 +142,10 @@ fun OpenAiSettingsContent(
 @Composable
 fun ModelAndToken(
     modifier: Modifier = Modifier,
-    selectedOption: Model,
-    changeModel: (Model) -> Unit,
+    selectedOption: ModelSettings,
+    changeModel: (ModelSettings) -> Unit,
 ) {
-    val modelState = remember { mutableStateOf(selectedOption.model) }
+    val modelState = remember { mutableStateOf(selectedOption.aiModel) }
     val temperatureState = remember { mutableStateOf(selectedOption.temperature) }
     val topPState = remember { mutableStateOf(selectedOption.topP) }
     val maxMessageCountState = remember { mutableStateOf(selectedOption.maxMessageCountInContext) }
@@ -162,7 +162,7 @@ fun ModelAndToken(
             value = modelState.value,
             onValueChange = {
                 modelState.value = it
-                changeModel(selectedOption.copy(model = it))
+                changeModel(selectedOption.copy(aiModel = it))
             },
             label = { ScaleText(stringResource(Res.string.model)) },
             textStyle = MaterialTheme.typography.labelMedium,

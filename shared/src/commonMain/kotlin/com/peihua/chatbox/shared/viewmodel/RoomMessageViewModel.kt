@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.peihua.chatbox.shared.compose.Settings
 import com.peihua.chatbox.shared.compose.settings
+import com.peihua.chatbox.shared.compose.settings.tabs.model.Model
 import com.peihua.chatbox.shared.compose.settings.tabs.model.ModelProvider
 import com.peihua.chatbox.shared.data.Message
 import com.peihua.chatbox.shared.data.Message.Companion.ChatBoxMessage
@@ -34,7 +35,7 @@ class RoomMessageViewModel(
     val factory: Factory = FactoryImpl(),
     val database: AppDatabase = factory.createRoomDatabase(),
     val messageQueries: MessageDao = database.messageDao(),
-    val repository: ChatAiRepository = ChatAiRepositoryFactory.create(settings.value.showModelName),
+    var repository: ChatAiRepository = ChatAiRepositoryFactory.create(settings.value.aiModel.model),
 ) : ViewModel() {
     val enInputState = mutableStateOf(true)
     private val _messages = mutableStateListOf<ChatBoxMessage>()
@@ -45,6 +46,7 @@ class RoomMessageViewModel(
     private fun sendMessage(menuId: Long, message: String): Flow<ChatBoxMessage> {
         dLog { "RoomMessageViewModel>>>>>> load menuId>>$menuId" }
         return flow {
+            checkModel()
             if (message.isEmpty()) {
                 val result = selectAllByMenuId(menuId)
                 result.map { it.ChatBoxMessage() }.forEach { emit(it) }
@@ -139,6 +141,21 @@ class RoomMessageViewModel(
             result
         }
     }
+    var curModel:Model = Model.OPenAI
+    /**
+     * 检查模型
+     */
+    fun checkModel() {
+        val model =  settings.value.aiModel.model
+        if (curModel != model) {
+            curModel = model
+            repository = ChatAiRepositoryFactory.create(model)
+        }
+    }
+}
+
+class ViewModelFactory(private val factory: Factory) : ViewModel() {
+    val roomMessageViewModel = RoomMessageViewModel(factory)
 }
 //
 //sealed class UiAction() {

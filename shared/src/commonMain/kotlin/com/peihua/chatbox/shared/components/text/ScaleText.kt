@@ -40,7 +40,7 @@ fun ScaleText(
     onTextLayout: ((TextLayoutResult) -> Unit)? = null,
     style: TextStyle = LocalTextStyle.current,
 ) {
-    val textScale = settings.value.textScaler.scale
+    val textScale = settings.value.display.textScaler.scale
     val fontSize = when{
         fontSize.isUnspecified -> if(style.fontSize.isUnspecified) DefaultFontSize else style.fontSize
         else -> fontSize

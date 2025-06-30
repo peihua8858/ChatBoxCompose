@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
 import chatboxcompose.shared.generated.resources.settingsModelProvider
 import com.peihua.chatbox.shared.components.text.ScaleText
+import com.peihua.chatbox.shared.compose.changeSettings
+import com.peihua.chatbox.shared.compose.settings
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,8 +33,11 @@ import org.jetbrains.compose.resources.stringResource
 fun ModelSettingsScreen(modifier: Modifier = Modifier) {
     val colorScheme = MaterialTheme.colorScheme
     val isExpanded = remember { mutableStateOf(false) }
-    val selectedOption = remember { mutableStateOf(ModelProvider.OPenAI) }
     val models = Chat_Models
+    val selectionModel = settings.value.aiModel
+    val selectedModel = models.find { it.model == selectionModel.model } ?: models.first()
+    selectedModel.settings = selectionModel
+    val selectedOption = remember { mutableStateOf(selectedModel) }
     val modelProvider = selectedOption.value
     Column(
         modifier = modifier
@@ -45,7 +50,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
             onExpandedChange = { isExpanded.value = it },
         ) {
             OutlinedTextField(
-                value = selectedOption.value.name,
+                value = selectedOption.value.model.displayName,
                 onValueChange = {
                 },
                 label = { ScaleText(stringResource(Res.string.settingsModelProvider)) },
@@ -67,7 +72,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                             .background(if (selected) colorScheme.secondaryContainer else Color.Transparent),
                         text = {
                             ScaleText(
-                                text = item.name,
+                                text = item.model.displayName,
                                 color = if (selected) colorScheme.onSecondaryContainer else colorScheme.onSurfaceVariant,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -75,12 +80,16 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                         onClick = {
                             selectedOption.value = item
                             isExpanded.value = !isExpanded.value
+                            changeSettings(aiModel = selectionModel.copy(model = item.model))
                         },
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        modelProvider.contentView(Modifier, modelProvider, { selectedOption.value = it })
+        modelProvider.model.contentView(Modifier, modelProvider, {
+            selectedOption.value = it
+            changeSettings(aiModel = it.settings)
+        })
     }
 }

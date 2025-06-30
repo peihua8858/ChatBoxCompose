@@ -19,12 +19,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ChatBoxApp { model, colorScheme ->
                 window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-                    val color = argb(
-                        colorScheme.surface.alpha,
-                        colorScheme.surface.red,
-                        colorScheme.surface.green,
-                        colorScheme.surface.blue
-                    )
+                    val color = colorScheme.surface.argb()
                     view.setBackgroundColor(color)
                     //状态栏高亮flag
                     WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars =

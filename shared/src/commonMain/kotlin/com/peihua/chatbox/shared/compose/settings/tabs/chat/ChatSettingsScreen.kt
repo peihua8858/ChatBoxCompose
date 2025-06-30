@@ -49,9 +49,9 @@ fun ChatSettingsScreen(modifier: Modifier = Modifier) {
                 })
         SwitchListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = settings.value.spellCheck,
+            checked = settings.value.display.spellCheck,
             onCheckedChange = {
-                changeSettings(spellCheck = it)
+                changeSettings(display = settings.value.display.copy(spellCheck = it))
             }) {
             ScaleText(
                 modifier = Modifier.padding(start = 8.dp),

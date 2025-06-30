@@ -1,17 +1,24 @@
 package com.peihua.chatbox.shared.compose
 
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
-import com.peihua.chatbox.shared.theme.ThemeMode
+import com.peihua.chatbox.shared.compose.settings.tabs.display.DisplaySettings
+import com.peihua.chatbox.shared.compose.settings.tabs.model.ModelSettings
+import com.peihua.chatbox.shared.compose.settings.tabs.other.OtherSettings
 import kotlinx.serialization.Serializable
+
 @Serializable
 data class Settings(
-    val themeMode: ThemeMode,
-    val language: String,
-    val showAvatar: Boolean,
-    val showWordCount: Boolean,
-    val showTokenCount: Boolean,
-    val showModelName: Boolean,
-    val showTokenUsage: Boolean,
-    val spellCheck: Boolean,
-    val textScaler: TextScaler
-)
+    var display: DisplaySettings,
+    var aiModel: ModelSettings,
+    var proxy: OtherSettings,
+) {
+    companion object {
+        fun default(): Settings {
+            return Settings(
+                display = DisplaySettings.default(),
+                aiModel = ModelSettings.default(),
+                proxy = OtherSettings.default(),
+            )
+        }
+
+    }
+}

@@ -50,6 +50,7 @@ import com.peihua.chatbox.shared.compose.changeSettings
 import com.peihua.chatbox.shared.compose.settings
 import com.peihua.chatbox.shared.localeProvider
 import com.peihua.chatbox.shared.theme.ThemeMode
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -60,7 +61,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
     val localeList = languageCodes.map { Locale(it) }
     val isExpanded = remember { mutableStateOf(false) }
     val selectedOption = remember { mutableStateOf(Locale.current) }
-    val textScaler =settings.value.textScaler
+    val displaySettings = settings.value.display
+    val textScaler = displaySettings.textScaler
     val sliderPosition = remember { mutableFloatStateOf(textScaler.scale) }
     val colorScheme = MaterialTheme.colorScheme
     Column(
@@ -103,7 +105,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         },
                         onClick = {
                             selectedOption.value = locale
-                            changeSettings(language = locale.toLanguageTag())
+                             changeSettings(display = displaySettings.copy(language = locale.toLanguageTag()))
                             isExpanded.value = !isExpanded.value
                         },
                     )
@@ -115,13 +117,13 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
             value = sliderPosition.value,
             title = stringResource(Res.string.text_font_size),
             steps = 2,
-            valueRange =  0.8f..1.4f,
+            valueRange = 0.8f..1.4f,
             thumbText = {
                 TextScaler.parse(it)
             },
             onChangValue = {
                 sliderPosition.value = it
-                changeSettings(textScaler = textScaler.copy(scale = it))
+                 changeSettings(display = displaySettings.copy(textScaler = textScaler.copy(scale = it)))
             })
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -149,8 +151,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.System.index,
                         count = 3
                     ),
-                    onClick = {changeSettings(themeMode = ThemeMode.System) },
-                    selected = ThemeMode.System == settings.value.themeMode,
+                    onClick = {  changeSettings(display = displaySettings.copy(themeMode = ThemeMode.System)) },
+                    selected = ThemeMode.System == displaySettings.themeMode,
                     icon = {
 
                     },
@@ -167,8 +169,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.Light.index,
                         count = 3
                     ),
-                    onClick = { changeSettings(themeMode = ThemeMode.Light) },
-                    selected = ThemeMode.Light == settings.value.themeMode,
+                    onClick = {  changeSettings(display = displaySettings.copy(themeMode = ThemeMode.Light)) },
+                    selected = ThemeMode.Light == displaySettings.themeMode,
                     icon = {
 
                     },
@@ -185,8 +187,8 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
                         index = ThemeMode.Dark.index,
                         count = 3
                     ),
-                    onClick = { changeSettings(themeMode = ThemeMode.Dark) },
-                    selected = ThemeMode.Dark == settings.value.themeMode,
+                    onClick = {  changeSettings(display = displaySettings.copy(themeMode = ThemeMode.Dark)) },
+                    selected = ThemeMode.Dark == displaySettings.themeMode,
                     icon = {
 
                     },
@@ -201,7 +203,7 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         }
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = settings.value.showWordCount,
+            checked = displaySettings.showWordCount,
             onCheckedChange = {
             },
             title = {
@@ -210,9 +212,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = settings.value.showTokenCount,
+            checked = displaySettings.showTokenCount,
             onCheckedChange = {
-                changeSettings(showTokenCount = it)
+                 changeSettings(display = displaySettings.copy(showTokenCount = it))
             },
             title = {
                 ScaleText(text = stringResource(Res.string.settingsShowTokenCount))
@@ -220,9 +222,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = settings.value.showTokenUsage,
+            checked = displaySettings.showTokenUsage,
             onCheckedChange = {
-                changeSettings(showTokenUsage = it)
+                 changeSettings(display = displaySettings.copy(showTokenUsage = it))
             },
             title = {
                 ScaleText(text = stringResource(Res.string.settingsShowTokenUsage))
@@ -230,9 +232,9 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
         CheckboxListTile(
             modifier = Modifier.padding(top = 16.dp),
-            checked = settings.value.showModelName,
+            checked = displaySettings.showModelName,
             onCheckedChange = {
-                changeSettings(showModelName = it)
+                changeSettings(display = displaySettings.copy(showModelName = it))
             },
             title = {
                 ScaleText(text = stringResource(Res.string.settingsShowModelName))
@@ -240,7 +242,6 @@ fun DisplaySettingsScreen(modifier: Modifier = Modifier) {
         )
     }
 }
-
 
 data class LangDisplayOption(val title: String, val subtitle: String, val locale: Locale) {
     override fun toString(): String {
@@ -251,3 +252,33 @@ data class LangDisplayOption(val title: String, val subtitle: String, val locale
 
 val Locale.displayName: String
     get() = language.localeProvider().displayName()
+
+
+@Serializable
+data class DisplaySettings(
+    val themeMode: ThemeMode,
+    val language: String,
+    val showAvatar: Boolean,
+    val showWordCount: Boolean,
+    val showTokenCount: Boolean,
+    val showModelName: Boolean,
+    val showTokenUsage: Boolean,
+    val spellCheck: Boolean,
+    val textScaler: TextScaler,
+) {
+    companion object {
+        fun default(): DisplaySettings {
+            return DisplaySettings(
+                themeMode = ThemeMode.System,
+                language = Locale.current.toLanguageTag(),
+                showAvatar = true,
+                showWordCount = true,
+                showTokenCount = true,
+                showModelName = true,
+                showTokenUsage = true,
+                spellCheck = true,
+                textScaler = TextScaler(1.0f, "Normal"),
+            )
+        }
+    }
+}

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.peihua.chatbox.shared.compose.Settings
+import com.peihua.chatbox.shared.compose.settings.tabs.display.DisplaySettings
 import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.platform
 
@@ -309,19 +310,19 @@ fun ChatBoxTheme(
     // Dynamic color is available on Android 12+
     content: @Composable() (ThemeMode, colorScheme: ColorScheme) -> Unit,
 ) {
-    val themeMode = config.themeMode
+    val themeMode = config.display.themeMode
 
     when (themeMode) {
         ThemeMode.Dark -> {
-            ChatBoxTheme(darkTheme = true, textScale = config.textScaler, content = content)
+            ChatBoxTheme(darkTheme = true, textScale = config.display.textScaler, content = content)
         }
 
         ThemeMode.Light -> {
-            ChatBoxTheme(darkTheme = false, textScale = config.textScaler,content = content)
+            ChatBoxTheme(darkTheme = false, textScale = config.display.textScaler,content = content)
         }
 
         ThemeMode.System -> {
-            ChatBoxTheme(darkTheme = isSystemInDarkTheme(), textScale = config.textScaler, content = content)
+            ChatBoxTheme(darkTheme = isSystemInDarkTheme(), textScale = config.display.textScaler, content = content)
         }
     }
 }

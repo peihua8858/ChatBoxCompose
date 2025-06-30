@@ -19,6 +19,7 @@ class DeepSeekRepositoryImpl : ChatAiRepository {
             if (httpResponse.isSuccess()) {
                 val channel = httpResponse.bodyAsChannel()
                 // 循环读取数据流
+                emit("我是Deep Seek")
                 while (!channel.isClosedForRead) {
                     val line = channel.readUTF8Line()
                     if (!line.isNullOrEmpty()) {

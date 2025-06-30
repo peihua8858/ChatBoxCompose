@@ -50,17 +50,7 @@ class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope
 
     internal object SettingsJsonSerializer : OkioSerializer<Settings> {
         override val defaultValue: Settings
-            get() = Settings(
-                themeMode = ThemeMode.System,
-                language = "zh",
-                showAvatar = true,
-                showWordCount = true,
-                showTokenCount = true,
-                showModelName = true,
-                showTokenUsage = true,
-                spellCheck = true,
-                textScaler = TextScaler(1.0f, "Normal"),
-            )
+            get() = Settings.default()
 
         override suspend fun readFrom(source: BufferedSource): Settings {
             return json.decodeFromString<Settings>(source.readUtf8())

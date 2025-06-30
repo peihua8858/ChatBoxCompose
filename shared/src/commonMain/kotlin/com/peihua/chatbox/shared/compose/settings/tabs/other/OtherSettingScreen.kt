@@ -40,6 +40,7 @@ import com.peihua.chatbox.shared.components.ExtendedListTile
 import com.peihua.chatbox.shared.components.RotatingView
 import com.peihua.chatbox.shared.components.tabLayout.TabPager
 import com.peihua.chatbox.shared.components.text.ScaleText
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -237,6 +238,38 @@ fun RestoreView(modifier: Modifier = Modifier) {
                 // 导入备份数据
             }) {
             ScaleText(text = stringResource(Res.string.settingsBackupAndRestoreImport))
+        }
+    }
+}
+
+@Serializable
+data class OtherSettings(
+    val proxy: ProxySettings,
+) {
+    companion object {
+        fun default(): OtherSettings {
+            return OtherSettings(
+                proxy = ProxySettings.default(),
+            )
+        }
+    }
+}
+
+@Serializable
+data class ProxySettings(
+    val host: String,
+    val port: Int,
+    val username: String,
+    val password: String,
+){
+    companion object{
+        fun default(): ProxySettings {
+            return ProxySettings(
+                host = "",
+                port = 0,
+                username = "",
+                password = "",
+            )
         }
     }
 }

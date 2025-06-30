@@ -243,4 +243,7 @@ fun argb(alpha: Float, red: Float, green: Float, blue: Float): Int {
 
 
 
+fun Color.argb(): Int {
+    return argb(alpha, red, green, blue)
+}
 
