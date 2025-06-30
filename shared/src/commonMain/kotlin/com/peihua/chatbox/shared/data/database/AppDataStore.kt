@@ -4,10 +4,9 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
 import com.peihua.chatbox.shared.compose.Settings
-import com.peihua.chatbox.shared.compose.settings.tabs.display.TextScaler
 import com.peihua.chatbox.shared.di.json
-import com.peihua.chatbox.shared.theme.ThemeMode
 import com.peihua.chatbox.shared.utils.WorkScope
+import com.peihua.chatbox.shared.utils.eLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -25,7 +24,7 @@ class AppDataStore(private val storePath: String) {
 class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope() {
     private val storeFile = "$storePath/settings.json"
     private val db = DataStoreFactory.create(
-        storage = OkioStorage<Settings>(
+        storage = OkioStorage(
             fileSystem = FileSystem.SYSTEM,
             serializer = SettingsJsonSerializer,
             producePath = {
@@ -53,7 +52,27 @@ class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope
             get() = Settings.default()
 
         override suspend fun readFrom(source: BufferedSource): Settings {
-            return json.decodeFromString<Settings>(source.readUtf8())
+            return try {
+                json.decodeFromString<Settings>(source.readUtf8())
+            } catch (e: Throwable) {
+                eLog { "readFrom error: ${e.message}" }
+                // 如果反序列化失败，返回默认设置
+                Settings.default()
+            }
+//         val jsonElement=   Json.decodeFromString<JsonElement>(source.readUtf8())
+//            val displaySettings = jsonElement.jsonObject["display"]?.let {
+//                Json.decodeFromJsonElement<DisplaySettings>(it)
+//            } ?: DisplaySettings.default()
+//
+//            val modelSettings = jsonElement.jsonObject["aiModel"]?.let {
+//                Json.decodeFromJsonElement<ModelSettings>(it)
+//            } ?: ModelSettings.default()
+//
+//            val proxySettings = jsonElement.jsonObject["proxy"]?.let {
+//                Json.decodeFromJsonElement<OtherSettings>(it)
+//            } ?: OtherSettings.default()
+//
+//            return Settings(displaySettings, modelSettings, proxySettings)
         }
 
         override suspend fun writeTo(
