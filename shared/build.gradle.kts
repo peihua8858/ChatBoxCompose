@@ -105,7 +105,7 @@ kotlin {
                 implementation("app.cash.sqldelight:runtime:2.0.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
                 // UI/UX Utils
-                var markdown = "0.32.0"
+                var markdown = "0.35.0"
                 implementation("com.mikepenz:multiplatform-markdown-renderer:${markdown}")
                 implementation("com.mikepenz:multiplatform-markdown-renderer-m3:${markdown}")
                 implementation("com.mikepenz:multiplatform-markdown-renderer-code:${markdown}")
