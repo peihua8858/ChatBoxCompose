@@ -12,6 +12,9 @@ expect class Factory {
 }
 
 
-val json = Json { ignoreUnknownKeys = true }
+val json = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+}
 
-expect fun FactoryImpl() : Factory
+expect fun FactoryImpl(): Factory

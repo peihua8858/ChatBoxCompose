@@ -83,10 +83,7 @@ class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope
             sink: BufferedSink,
         ) {
             sink.use {
-                dLog { "writeTo: $t" }
-                dLog { "writeTo: ${t.modelProvider}" }
-                dLog { "writeTo: ${Json.encodeToString(ModelSettings.serializer(), t.modelProvider)}" }
-                dLog { "writeTo: ${json.encodeToString(Settings.serializer(), t)}" }
+                dLog { "writeTo: ${json.encodeToString(ModelSettings.serializer(), t.modelProvider)}" }
                 it.writeUtf8(json.encodeToString(Settings.serializer(), t))
             }
         }

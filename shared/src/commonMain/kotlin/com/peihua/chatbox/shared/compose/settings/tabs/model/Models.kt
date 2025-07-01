@@ -8,7 +8,7 @@ import kotlin.String
 enum class Model(
     val host: String,
     val aiModel: String,
-    val contentView: @Composable (modifier: Modifier, provider: ModelProvider, modelChange: (ModelProvider) -> Unit) -> Unit,
+    val contentView: @Composable (Modifier, ModelProvider, (ModelProvider) -> Unit) -> Unit,
 ) {
     /**
      * OpenAI
