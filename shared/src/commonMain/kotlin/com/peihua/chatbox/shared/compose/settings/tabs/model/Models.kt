@@ -3,6 +3,7 @@ package com.peihua.chatbox.shared.compose.settings.tabs.model
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.serialization.Serializable
+import kotlin.String
 
 enum class Model(
     val host: String,
@@ -54,24 +55,31 @@ data class ModelSettings(
     val maxMessageCountInContext: Int = 10,
     val maxTokensInContext: Int = 1000,
     val maxTokensToGenerate: Int = 1000,
-
-    ){
-   companion object{
-       fun default(): ModelSettings {
-           return ModelSettings(
-               model = Model.OPenAI,
-               host = Model.OPenAI.host,
-               aiModel = Model.OPenAI.aiModel,
-               apiKey = "",
-           )
-       }
-   }
+) {
+    companion object {
+        fun default(): ModelSettings {
+            return ModelSettings(
+                model = Model.OPenAI,
+                host = Model.OPenAI.host,
+                aiModel = Model.OPenAI.aiModel,
+                apiKey = "",
+                apiKeyPlaceholder = "",
+                temperature = 0.7f,
+                meticulousCreative = 0.7f,
+                topP = 1f,
+                maxMessageCountInContext = 10,
+                maxTokensInContext = 1000,
+                maxTokensToGenerate = 1000,
+            )
+        }
+    }
 }
 
 data class ModelProvider(
     val model: Model,
     var settings: ModelSettings,
 )
+
 val Chat_Models: ArrayList<ModelProvider>
     get() {
         val values = Model.entries

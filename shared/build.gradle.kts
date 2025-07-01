@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrains.compose)
-    id("app.cash.sqldelight") version "2.0.2"
+    id("app.cash.sqldelight") version "2.1.0"
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.skie)
     alias(libs.plugins.ksp)
@@ -11,7 +11,6 @@ plugins {
 }
 
 kotlin {
-    val ktorVersion = "3.1.1"
 // Target declarations - add or remove as needed below. These define
 // which platforms this KMP module supports.
 // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
@@ -19,7 +18,7 @@ kotlin {
         namespace = "com.peihua.chatbox.shared"
         compileSdk = 35
         minSdk = 24
-
+        experimentalProperties["android.experimental.kmp.enableAndroidResources"] = true
         withHostTestBuilder {
         }
 
@@ -100,10 +99,10 @@ kotlin {
                 implementation(libs.kotlinx.atomicfu)
                 implementation(libs.okio)
                 implementation(libs.skie.annotations)
-                implementation("dev.tclement.fonticons:core:2.0.0")
+                implementation("dev.tclement.fonticons:core:2.1.1")
                 implementation(kotlin("stdlib-common"))
-                implementation("app.cash.sqldelight:runtime:2.0.2")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
+                implementation("app.cash.sqldelight:runtime:2.1.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.0")
                 // UI/UX Utils
                 var markdown = "0.35.0"
                 implementation("com.mikepenz:multiplatform-markdown-renderer:${markdown}")
@@ -121,7 +120,7 @@ kotlin {
                 // JVM 相关的标准库
                 implementation(kotlin("stdlib"))
                 implementation(libs.ktor.client.okhttp)
-                implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+                implementation("app.cash.sqldelight:sqlite-driver:2.1.0")
             }
         }
         commonTest {
@@ -135,11 +134,12 @@ kotlin {
                 // Add Android-specific dependencies here. Note that this source set depends on
                 // commonMain by default and will correctly pull the Android artifacts of any KMP
                 // dependencies declared in commonMain.
-                implementation("io.ktor:ktor-client-android:$ktorVersion")
+                implementation(libs.ktor.client.android)
+                implementation(libs.ktor.client.core.jvm)
                 implementation(libs.kotlin.stdlib)
                 implementation(kotlin("stdlib"))
                 implementation(libs.ktor.client.okhttp)
-                implementation("app.cash.sqldelight:android-driver:2.0.2")
+                implementation("app.cash.sqldelight:android-driver:2.1.0")
             }
         }
 
@@ -159,7 +159,7 @@ kotlin {
                 // on common by default and will correctly pull the iOS artifacts of any
                 // KMP dependencies declared in commonMain.
                 implementation(libs.ktor.client.darwin)
-                implementation("app.cash.sqldelight:native-driver:2.0.2")
+                implementation("app.cash.sqldelight:native-driver:2.1.0")
             }
         }
     }

@@ -4,12 +4,15 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
 import com.peihua.chatbox.shared.compose.Settings
+import com.peihua.chatbox.shared.compose.settings.tabs.model.ModelSettings
 import com.peihua.chatbox.shared.di.json
 import com.peihua.chatbox.shared.utils.WorkScope
+import com.peihua.chatbox.shared.utils.dLog
 import com.peihua.chatbox.shared.utils.eLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.FileSystem
@@ -80,6 +83,10 @@ class SettingsStore(private val storePath: String) : CoroutineScope by WorkScope
             sink: BufferedSink,
         ) {
             sink.use {
+                dLog { "writeTo: $t" }
+                dLog { "writeTo: ${t.modelProvider}" }
+                dLog { "writeTo: ${Json.encodeToString(ModelSettings.serializer(), t.modelProvider)}" }
+                dLog { "writeTo: ${json.encodeToString(Settings.serializer(), t)}" }
                 it.writeUtf8(json.encodeToString(Settings.serializer(), t))
             }
         }

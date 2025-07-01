@@ -34,7 +34,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
     val colorScheme = MaterialTheme.colorScheme
     val isExpanded = remember { mutableStateOf(false) }
     val models = Chat_Models
-    val selectionModel = settings.value.aiModel
+    val selectionModel = settings.value.modelProvider
     val selectedModel = models.find { it.model == selectionModel.model } ?: models.first()
     selectedModel.settings = selectionModel
     val selectedOption = remember { mutableStateOf(selectedModel) }
@@ -80,7 +80,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
                         onClick = {
                             selectedOption.value = item
                             isExpanded.value = !isExpanded.value
-                            changeSettings(aiModel = selectionModel.copy(model = item.model))
+                            changeSettings(modelProvider = selectionModel.copy(model = item.model))
                         },
                     )
                 }
@@ -89,7 +89,7 @@ fun ModelSettingsScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(16.dp))
         modelProvider.model.contentView(Modifier, modelProvider, {
             selectedOption.value = it
-            changeSettings(aiModel = it.settings)
+            changeSettings(modelProvider = it.settings)
         })
     }
 }

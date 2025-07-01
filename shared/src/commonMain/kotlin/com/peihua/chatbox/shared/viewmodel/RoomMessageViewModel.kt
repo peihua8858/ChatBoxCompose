@@ -35,7 +35,7 @@ class RoomMessageViewModel(
     val factory: Factory = FactoryImpl(),
     val database: AppDatabase = factory.createRoomDatabase(),
     val messageQueries: MessageDao = database.messageDao(),
-    var repository: ChatAiRepository = ChatAiRepositoryFactory.create(settings.value.aiModel.model),
+    var repository: ChatAiRepository = ChatAiRepositoryFactory.create(settings.value.modelProvider.model),
 ) : ViewModel() {
     val enInputState = mutableStateOf(true)
     private val _messages = mutableStateListOf<ChatBoxMessage>()
@@ -146,7 +146,7 @@ class RoomMessageViewModel(
      * 检查模型
      */
     fun checkModel() {
-        val model =  settings.value.aiModel.model
+        val model =  settings.value.modelProvider.model
         if (curModel != model) {
             curModel = model
             repository = ChatAiRepositoryFactory.create(model)

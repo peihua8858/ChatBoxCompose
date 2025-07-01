@@ -8,14 +8,14 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Settings(
     var display: DisplaySettings,
-    var aiModel: ModelSettings,
+    var modelProvider: ModelSettings,
     var proxy: OtherSettings,
 ) {
     companion object {
         fun default(): Settings {
             return Settings(
                 display = DisplaySettings.default(),
-                aiModel = ModelSettings.default(),
+                modelProvider = ModelSettings.default(),
                 proxy = OtherSettings.default(),
             )
         }

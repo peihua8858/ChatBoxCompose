@@ -107,13 +107,13 @@ val settings = mutableStateOf(Settings.default())
 
 fun changeSettings(
     display: DisplaySettings = settings.value.display,
-    aiModel: ModelSettings = settings.value.aiModel,
+    modelProvider: ModelSettings = settings.value.modelProvider,
     proxy: OtherSettings = settings.value.proxy,
 ) {
     changeSettings(
         settings.value.copy(
             display = display,
-            aiModel = aiModel,
+            modelProvider = modelProvider,
             proxy = proxy,
         )
     )

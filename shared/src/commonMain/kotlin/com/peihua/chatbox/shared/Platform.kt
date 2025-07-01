@@ -2,8 +2,8 @@ package com.peihua.chatbox.shared
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 interface Platform {
     val name: String
@@ -19,6 +19,7 @@ interface Platform {
 expect fun platform(): Platform
 
 //时间毫秒
+@OptIn(ExperimentalTime::class)
 fun currentTimeMillis(): Long {
     return Clock.System.now().toEpochMilliseconds()
 }

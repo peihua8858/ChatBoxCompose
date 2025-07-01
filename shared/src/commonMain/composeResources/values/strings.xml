@@ -63,6 +63,7 @@
     <string name="settingsModelMaxMessageCountInContext">Max Message Count in Context</string>
     <string name="settingsModelMaxTokensInContext">Max Tokens in Context</string>
     <string name="settingsModelMaxTokensToGenerate">Max Tokens to Generate</string>
+    <string name="settingsChatHelpAssistant">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</string>
     <!--    <string name="settingsModelProviderTips">Untitled-->
 <!--You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.-->
 

@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import chatboxcompose.shared.generated.resources.Res
+import chatboxcompose.shared.generated.resources.settingsChatHelpAssistant
 import chatboxcompose.shared.generated.resources.settingsNewChatTips
 import chatboxcompose.shared.generated.resources.settingsResetDefault
 import chatboxcompose.shared.generated.resources.settingsSpellCheck
@@ -26,8 +27,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ChatSettingsScreen(modifier: Modifier = Modifier) {
     val scrollState = rememberScrollState()
-    val chatTips =
-        remember { mutableStateOf("You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.") }
+    val text =stringResource(Res.string.settingsChatHelpAssistant)
+    val chatTips = remember { mutableStateOf(text) }
     Column(
         modifier = modifier
             .fillMaxSize()
